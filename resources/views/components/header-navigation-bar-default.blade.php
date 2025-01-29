@@ -1,0 +1,25 @@
+<nav
+    data-open-label="Menu"
+    data-close-label="Sluit menu"
+    data-media="(min-width: 42rem)"
+    aria-label="{{ __('Main navigation') }}"
+    class="collapsible">
+    <div class="collapsing-element">
+        <ul>
+            <li>
+                <a href="{{ route('index') }}" @if(\Illuminate\Support\Facades\Route::currentRouteName() === 'index') aria-current="page" @endif><span class="icon icon-home">Home-icoon</span>@lang('Home')</a>
+                <a href="{{ route('portals.index') }}" @if(\Illuminate\Support\Facades\Route::currentRouteName() === 'portals.index') aria-current="page" @endif>@lang('Portal Registration')</a>
+            </li>
+        </ul>
+        @auth
+        <ul>
+            <li>
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit">@lang('Logout')</button>
+                </form>
+            </li>
+        </ul>
+        @endauth
+    </div>
+</nav>
