@@ -24,7 +24,7 @@ services:
             - zmodules
 
     portal_db:
-        image: postgres:11
+        image: postgres:14
         ports:
             - '5410:5432'
         environment:
