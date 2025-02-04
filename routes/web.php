@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\Auth\DigidMockController;
@@ -37,3 +38,7 @@ Route::middleware(['auth'])
         Route::get('index', [PortalController::class, 'index'])->name('index');
         Route::post('index', [PortalController::class, 'edit'])->name('edit');
     });
+
+
+Route::get('/api/suppliers', [ApiController::class, 'getAll'])->name('api.supplier.get_all');
+Route::get('/api/supplier/{supplier_id}', [ApiController::class, 'getOne'])->name('api.supplier.get_one');
