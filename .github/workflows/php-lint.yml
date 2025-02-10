@@ -17,7 +17,7 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        php-versions: [ '8.2', '8.3' ]
+        php-versions: [ '8.2', '8.3', '8.4' ]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -57,7 +57,7 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        php-versions: [ '8.2', '8.3' ]
+        php-versions: [ '8.2', '8.3', '8.4' ]
 
   php-linting-psr12:
     needs:
@@ -79,7 +79,7 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        php-versions: [ '8.2', '8.3' ]
+        php-versions: [ '8.2', '8.3', '8.4' ]
 
   php-linting-stan:
     needs:
@@ -123,7 +123,7 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        php-versions: [ '8.2', '8.3' ]
+        php-versions: [ '8.2', '8.3', '8.4' ]
 
   php-linting-cve:
     needs:
@@ -145,4 +145,4 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        php-versions: [ '8.2', '8.3' ]
+        php-versions: [ '8.2', '8.3', '8.4' ]
