@@ -53,7 +53,7 @@ jobs:
       - name: Generate _ide_helper file
         run: php artisan ide-helper:generate
       - name: Static analysis with Psalm
-        run: vendor/bin/psalm -c psalm.xml
+        run: vendor/bin/psalm
     strategy:
       max-parallel: 3
       matrix:
