@@ -77,7 +77,10 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => 'prefer',
+            'sslmode' => env('DB_APPLICATION_SSLMODE', 'prefer'),
+            'sslrootcert' => env('DB_APPLICATION_SSLROOTCERT', null),
+            'sslcert' => env('DB_APPLICATION_SSLCERT', null),
+            'sslkey' => env('DB_APPLICATION_SSLKEY', null),
         ],
 
         'sqlsrv' => [
