@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "771bc087b1d919b59b6259cf2643bc50",
+    "content-hash": "e26d992ff8ecf7094f4d4553ca0bea80",
     "packages": [
         {
             "name": "brick/math",
@@ -1056,16 +1056,16 @@
         },
         {
             "name": "jumbojett/openid-connect-php",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jumbojett/OpenID-Connect-PHP.git",
-                "reference": "4e4883926287bc4420438899bedd58b8d2d5812d"
+                "reference": "f327e7eb0626d55ddb6abc7b7c9e6ad3af4e5d51"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jumbojett/OpenID-Connect-PHP/zipball/4e4883926287bc4420438899bedd58b8d2d5812d",
-                "reference": "4e4883926287bc4420438899bedd58b8d2d5812d",
+                "url": "https://api.github.com/repos/jumbojett/OpenID-Connect-PHP/zipball/f327e7eb0626d55ddb6abc7b7c9e6ad3af4e5d51",
+                "reference": "f327e7eb0626d55ddb6abc7b7c9e6ad3af4e5d51",
                 "shasum": ""
             },
             "require": {
@@ -1092,9 +1092,9 @@
             "description": "Bare-bones OpenID Connect client",
             "support": {
                 "issues": "https://github.com/jumbojett/OpenID-Connect-PHP/issues",
-                "source": "https://github.com/jumbojett/OpenID-Connect-PHP/tree/v1.0.1"
+                "source": "https://github.com/jumbojett/OpenID-Connect-PHP/tree/v1.0.2"
             },
-            "time": "2024-09-05T18:45:18+00:00"
+            "time": "2024-09-13T07:08:11+00:00"
         },
         {
             "name": "laravel/framework",
@@ -1867,29 +1867,30 @@
         },
         {
             "name": "minvws/openid-connect-php-laravel",
-            "version": "v0.3.0",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/minvws/nl-rdo-openid-connect-php-laravel.git",
-                "reference": "058238f1ac8b761c11a3b226c192f52a83c063e0"
+                "reference": "bc12c0fb9fd1d06b8a52b1b9da64e38b5f8ec1ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minvws/nl-rdo-openid-connect-php-laravel/zipball/058238f1ac8b761c11a3b226c192f52a83c063e0",
-                "reference": "058238f1ac8b761c11a3b226c192f52a83c063e0",
+                "url": "https://api.github.com/repos/minvws/nl-rdo-openid-connect-php-laravel/zipball/bc12c0fb9fd1d06b8a52b1b9da64e38b5f8ec1ad",
+                "reference": "bc12c0fb9fd1d06b8a52b1b9da64e38b5f8ec1ad",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^7.5",
-                "jumbojett/openid-connect-php": "^1.0.0",
+                "illuminate/contracts": "^10.0||^11.0",
+                "jumbojett/openid-connect-php": "^1.0.2",
                 "php": ">=8.1",
                 "web-token/jwt-library": "^3.4"
             },
             "require-dev": {
                 "ext-openssl": "*",
-                "orchestra/testbench": "^6.0|^7.0|^8.0",
+                "orchestra/testbench": "^8.0||^9.0",
                 "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^9.6",
+                "phpunit/phpunit": "^10.0",
                 "slevomat/coding-standard": "^8.14",
                 "squizlabs/php_codesniffer": "^3.8",
                 "vimeo/psalm": "^5.8"
@@ -1920,9 +1921,9 @@
             "description": "OpenID Connect client for Laravel",
             "support": {
                 "issues": "https://github.com/minvws/nl-rdo-openid-connect-php-laravel/issues",
-                "source": "https://github.com/minvws/nl-rdo-openid-connect-php-laravel/tree/v0.3.0"
+                "source": "https://github.com/minvws/nl-rdo-openid-connect-php-laravel/tree/v0.3.1"
             },
-            "time": "2024-06-10T14:20:43+00:00"
+            "time": "2025-02-11T12:03:33+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -2029,16 +2030,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.72.6",
+            "version": "2.73.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CarbonPHP/carbon.git",
-                "reference": "1e9d50601e7035a4c61441a208cb5bed73e108c5"
+                "reference": "9228ce90e1035ff2f0db84b40ec2e023ed802075"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/1e9d50601e7035a4c61441a208cb5bed73e108c5",
-                "reference": "1e9d50601e7035a4c61441a208cb5bed73e108c5",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/9228ce90e1035ff2f0db84b40ec2e023ed802075",
+                "reference": "9228ce90e1035ff2f0db84b40ec2e023ed802075",
                 "shasum": ""
             },
             "require": {
@@ -2132,7 +2133,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-27T09:28:11+00:00"
+            "time": "2025-01-08T20:10:23+00:00"
         },
         {
             "name": "nette/schema",
@@ -11191,15 +11192,15 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.1.0"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
