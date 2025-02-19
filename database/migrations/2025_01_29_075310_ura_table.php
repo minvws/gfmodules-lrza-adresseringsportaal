@@ -11,6 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('kvks', function (Blueprint $table) {
+            $table->uuid('id')->unique()->primary();
+            $table->string('kvk');
+            $table->timestamps();
+        });
+
         Schema::create('uras', function (Blueprint $table) {
             $table->uuid('id')->unique()->primary();
             $table->string('ura');
@@ -23,7 +29,8 @@ return new class extends Migration
             $table->string('endpoint', 1024);
             $table->timestamps();
 
-            $table->foreignUuid('ura_id')->references('id')->on('uras')->onDelete('cascade');
+            $table->foreignUuid('ura_id')->nullable()->constrained("uras")->references('id')->on('uras')->onDelete('cascade');
+            $table->foreignUuid('kvk_id')->nullable()->constrained("kvk")->references('id')->on('kvks')->onDelete('cascade');
         });
     }
 
@@ -33,6 +40,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('uras');
+        Schema::dropIfExists('kvks');
         Schema::dropIfExists('suppliers');
     }
 };

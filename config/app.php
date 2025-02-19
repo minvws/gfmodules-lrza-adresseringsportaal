@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+    'allow_insecure_endpoints' => env('ALLOW_INSECURE_ENDPOINTS', false),
+    'default_ura_number' => env('DEFAULT_URA_NUMBER', ''),
+    'default_kvk_number' => env('DEFAULT_KVK_NUMBER', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
