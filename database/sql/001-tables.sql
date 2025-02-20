@@ -25,8 +25,12 @@ create table public.suppliers
     created_at timestamp(0),
     updated_at timestamp(0),
     ura_id     uuid          not null
+    kvk_id     uuid          not null
         constraint suppliers_ura_id_foreign
             references public.uras
+            on delete cascade
+        constraint suppliers_kvk_id_foreign
+            references public.kvks
             on delete cascade
 );
 

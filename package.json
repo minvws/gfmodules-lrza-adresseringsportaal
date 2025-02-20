@@ -8,14 +8,19 @@
         "lint": "eslint ."
     },
     "devDependencies": {
-        "laravel-vite-plugin": "^1.0.5",
+        "laravel-vite-plugin": "^1.2.0",
         "sass": "^1.83.1",
-        "vite": "^6.0.11"
+        "vite": "^6.1.1"
     },
     "dependencies": {
         "@minvws/manon": "^17.0.0-beta.2",
         "@minvws/manon-themes": "^17.0.0-beta.2",
         "@minvws/nl-rdo-rijksoverheid-ui-theme": "^0.1.0-beta.3",
         "eslint": "^9.20.1"
+    },
+    "overrides": {
+         "vite": {
+             "esbuild": "^0.25.0"
+         }
     }
 }

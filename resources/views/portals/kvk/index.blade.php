@@ -11,14 +11,14 @@
     @endif
 
     @session('success')
-        <div class="confirmation" role="group" aria-label="Confirmation">
-            <p>{{ $value }}</p>
-        </div>
+    <div class="confirmation" role="group" aria-label="Confirmation">
+        <p>{{ $value }}</p>
+    </div>
     @endsession
 
     <section class="layout-form">
         <div>
-            <h1>PORTAL AUTH PAGE</h1>
+            <h1>KVK PORTAL PAGE</h1>
 
             @foreach ($errors->all() as $message)
                 <div class="error" role="alert">
@@ -26,24 +26,20 @@
                 </div>
             @endforeach
 
-            <table>
-                <tr><td>Logged in URA</td><td>{{ Auth::user()->ura_number }}</td></tr>
-            </table>
-
-            <form action="{{route('portals.index')}}" method="post">
+            <form action="{{route('portal.kvk.index')}}" method="post">
                 @csrf
-                <label for="form-example-base">Supplier endpoint</label>
 
+                <label for="endpoint">Supplier endpoint</label>
                 <div>
-                    <span class="nota-bene" id="form-example-base-explanation">
+                    <span class="nota-bene" id="endpoint-explanation">
                         Enter the endpoint (starting with https://) of the supplier you want to use.
                     </span>
                     <input
                         id="endpoint"
                         name="endpoint"
                         type="text"
-                        value="{{ old('endpoint') ?? $ura->suppliers[0]->endpoint ?? '' }}"
-                        aria-describedby="endpoint"
+                        value="{{ old('endpoint') ?? $kvk_user->suppliers[0]->endpoint ?? '' }}"
+                        aria-describedby="endpoint-explanation"
                     />
                 </div>
 

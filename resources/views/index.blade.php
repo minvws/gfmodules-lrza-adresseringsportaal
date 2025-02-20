@@ -16,7 +16,23 @@
 
             <p>Here be registrations of portals. Please note that the cake is a lie.</p>
 
-            <a href="{{ route('portals.index') }}">To the portal registration &raquo;</a>
+            @foreach ($errors->all() as $message)
+                <div class="error" role="alert">
+                    <p>{{ $message }}</p>
+                </div>
+            @endforeach
+
+            <form action="{{route('login.ura')}}" method="post">
+                @csrf
+                <input type="text" name="ura" value="{{ config('app.default_ura_number') }}"/>
+                <button>Login as an URA user</button>
+            </form>
+
+            <form action="{{route('login.kvk')}}" method="post">
+                @csrf
+                <input type="text" name="kvk" value="{{ config('app.default_kvk_number') }}"/>
+                <button>Login as an KVK user</button>
+            </form>
         </div>
     </section>
 @endsection

@@ -4,55 +4,111 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Kvk;
+use App\Models\KvkUser;
 use App\Models\Ura;
 use App\Models\UraUser;
+use App\Services\Eherkenning\KvkAuthGuard;
+use App\Services\Eherkenning\UraAuthGuard;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
 class PortalController extends Controller
 {
-    public function index(): View
+    public function uraIndex(UraAuthGuard $guard): View
     {
-        /** @var UraUser $auth */
-        $auth = auth()->user();
-        $ura = Ura::firstWhere('ura', $auth->ura_number);
-        if ($ura === null) {
-            throw new NotFoundHttpException('URA not found');
-        }
-
-        return view('portals/index')->with('ura', $ura);
+        $ura_user = $guard->user();
+        return view('portals/ura/index')->with('ura_user', $ura_user);
     }
 
-    public function edit(Request $request): RedirectResponse
+    public function kvkIndex(KvkAuthGuard $guard): View
     {
-        $validated_data = $request->validate([
-            'endpoint' => 'required|url|max:1024|starts_with:https://',
-        ]);
+        $kvk_user = $guard->user();
+        return view('portals/kvk/index')->with('kvk_user', $kvk_user);
+    }
 
-        /** @var UraUser $auth */
-        $auth = auth()->user();
-        $ura = Ura::firstWhere('ura', $auth->ura_number);
+    public function uraEdit(Request $request, UraAuthGuard $guard): RedirectResponse
+    {
+        $validated_data = $this->checkEndpoint($request);
+
+        $ura_user = $guard->user();
+        if ($ura_user === null) {
+            throw new AccessDeniedException('URA user not found');
+        }
+        /** @var UraUser $ura_user */
+        $ura = Ura::firstWhere('ura', $ura_user->ura_number);
         if ($ura === null) {
-            throw new NotFoundHttpException('URA not found');
+            throw new AccessDeniedException('URA not found');
         }
 
-        if ($ura->suppliers()->count() === 0) {
+        $this->updateSupplierEndpoint($ura, $validated_data);
+
+        return redirect()
+            ->route('portal.ura.index')
+            ->with('success', 'Supplied endpoint was successfully updated')
+        ;
+    }
+
+    public function kvkEdit(Request $request, KvkAuthGuard $guard): RedirectResponse
+    {
+        $validated_data = $this->checkEndpoint($request);
+
+        $kvk_user = $guard->user();
+        if ($kvk_user === null) {
+            throw new AccessDeniedException('KVK user not found');
+        }
+        /** @var KvkUser $kvk_user */
+        $kvk = Kvk::firstWhere('kvk', $kvk_user->kvk_number);
+        if ($kvk === null) {
+            throw new AccessDeniedException('KVK not found');
+        }
+
+        $this->updateSupplierEndpoint($kvk, $validated_data);
+
+        return redirect()
+            ->route('portal.kvk.index')
+            ->with('success', 'Supplied endpoint was successfully updated')
+            ;
+    }
+
+    # @phpstan-ignore-next-line
+    protected function checkEndpoint(Request $request): array
+    {
+        return $request->validate([
+            'endpoint' => [
+                'required',
+                'url',
+                'max:1024',
+                function ($attribute, $value, $fail) {
+                    $prefixes = ["https://"];
+                    if (config('app.allow_insecure_endpoints') === true) {
+                        $prefixes[] = "http://";
+                    }
+                    if (!Str::startsWith(strtolower($value), $prefixes)) {
+                        $fail($attribute . ' must start with https://');
+                    }
+                },
+            ]
+        ]);
+    }
+
+    # @phpstan-ignore-next-line
+    protected function updateSupplierEndpoint(Ura|Kvk $user, array $validated_data): void
+    {
+        if ($user->suppliers()->count() === 0) {
             // Create a new supplier if there are no suppliers available yet
-            $ura->suppliers()->create($validated_data);
+            $user->suppliers()->create($validated_data);
         } else {
             // Update the first supplier
-            $supplier = $ura->suppliers()->first();
+            $supplier = $user->suppliers()->first();
             if ($supplier === null) {
-                throw new NotFoundHttpException('No supplier found');
+                throw new BadRequestException('No supplier found');
             }
             $supplier->update($validated_data);
         }
-
-        return redirect()
-            ->route('portals.index')
-            ->with('success', 'Supplied endpoint was successfully updated')
-        ;
     }
 }

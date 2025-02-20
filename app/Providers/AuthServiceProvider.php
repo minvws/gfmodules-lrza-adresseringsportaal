@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Services\Eherkenning\KvkAuthGuard;
 use App\Services\Eherkenning\UraAuthGuard;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
@@ -26,8 +27,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Auth::extend('oidc', function ($app, $name, array $config) {
+        Auth::extend('ura', function ($app, $name, array $config) {
             return new UraAuthGuard($app->make('session')->driver(), $app->make('events'));
+        });
+        Auth::extend('kvk', function ($app, $name, array $config) {
+            return new KvkAuthGuard($app->make('session')->driver(), $app->make('events'));
         });
     }
 }

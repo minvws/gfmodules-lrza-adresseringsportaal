@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services\Eherkenning;
 
-use App\Models\UraUser;
+use App\Models\KvkUser;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Session\Session;
 
-class UraAuthGuard implements Guard
+class KvkAuthGuard implements Guard
 {
-    protected const SESSION_KEY = 'ura_user';
+    protected const SESSION_KEY = 'kvk_user';
 
     public function __construct(
         protected Session $session,
@@ -31,7 +31,7 @@ class UraAuthGuard implements Guard
         return !$this->check();
     }
 
-    public function user(): UraUser | null
+    public function user(): KvkUser | null
     {
         if (!$this->check()) {
             return null;
@@ -43,7 +43,7 @@ class UraAuthGuard implements Guard
     public function id(): string | null
     {
         # @phpstan-ignore-next-line
-        return $this->user()?->ura_number;
+        return $this->user()?->kvk_number;
     }
 
     /**

@@ -37,6 +37,6 @@ class OidcLoginResponseHandler implements LoginResponseHandlerInterface
             Ura::create(['ura' => $user->ura_number]);
         }
 
-        return new RedirectResponse(route('portals.index'));
+        return new RedirectResponse(route('portal.ura.index'));
     }
 }
