@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('kvks', function (Blueprint $table) {
             $table->uuid('id')->unique()->primary();
-            $table->string('kvk');
+            $table->string('kvk')->unique();
             $table->timestamps();
         });
 
         Schema::create('uras', function (Blueprint $table) {
             $table->uuid('id')->unique()->primary();
-            $table->string('ura');
+            $table->string('ura')->unique();
             $table->string('description')->nullable();
             $table->timestamps();
         });

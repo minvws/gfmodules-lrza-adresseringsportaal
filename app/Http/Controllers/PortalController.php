@@ -8,47 +8,39 @@ use App\Models\Kvk;
 use App\Models\KvkUser;
 use App\Models\Ura;
 use App\Models\UraUser;
+use App\Services\Eherkenning\KvkAuthGuard;
+use App\Services\Eherkenning\UraAuthGuard;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PortalController extends Controller
 {
-    public function uraIndex(): View
+    public function uraIndex(UraAuthGuard $guard): View
     {
-        /** @var UraUser $auth */
-        $auth = auth()->user();
-        $ura_user = Ura::firstWhere('ura', $auth->ura_number);
-        if ($ura_user === null) {
-            throw new NotFoundHttpException('URA not found');
-        }
-
+        $ura_user = $guard->user();
         return view('portals/ura/index')->with('ura_user', $ura_user);
     }
 
-    public function kvkIndex(): View
+    public function kvkIndex(KvkAuthGuard $guard): View
     {
-        /** @var KvkUser $auth */
-        $auth = auth()->user();
-        $kvk_user = Kvk::firstWhere('kvk', $auth->kvk_number);
-        if ($kvk_user === null) {
-            throw new NotFoundHttpException('KVK not found');
-        }
-
+        $kvk_user = $guard->user();
         return view('portals/kvk/index')->with('kvk_user', $kvk_user);
     }
 
-    public function uraEdit(Request $request): RedirectResponse
+    public function uraEdit(Request $request, UraAuthGuard $guard): RedirectResponse
     {
         $validated_data = $this->checkEndpoint($request);
 
-        /** @var UraUser $auth */
-        $auth = auth()->user();
-        $ura = Ura::firstWhere('ura', $auth->ura_number);
+        /** @var UraUser $ura_user */
+        $ura_user = $guard->user();
+        if ($ura_user === null) {
+            throw new AccessDeniedException('URA user not found');
+        }
+        $ura = Ura::firstWhere('ura', $ura_user->ura_number);
         if ($ura === null) {
             throw new AccessDeniedException('URA not found');
         }
@@ -61,13 +53,16 @@ class PortalController extends Controller
         ;
     }
 
-    public function kvkEdit(Request $request): RedirectResponse
+    public function kvkEdit(Request $request, KvkAuthGuard $guard): RedirectResponse
     {
         $validated_data = $this->checkEndpoint($request);
 
-        /** @var KvkUser $auth */
-        $auth = auth()->user();
-        $kvk = Kvk::firstWhere('kvk', $auth->kvk_number);
+        /** @var KvkUser $kvk_user */
+        $kvk_user = $guard->user();
+        if ($kvk_user === null) {
+            throw new AccessDeniedException('KVK user not found');
+        }
+        $kvk = Kvk::firstWhere('kvk', $guard->user()->kvk_number);
         if ($kvk === null) {
             throw new AccessDeniedException('KVK not found');
         }

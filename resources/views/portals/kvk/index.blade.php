@@ -39,7 +39,7 @@
                         name="endpoint"
                         type="text"
                         value="{{ old('endpoint') ?? $kvk_user->suppliers[0]->endpoint ?? '' }}"
-                        aria-describedby="endpoint"
+                        aria-describedby="endpoint-explanation"
                     />
                 </div>
 
