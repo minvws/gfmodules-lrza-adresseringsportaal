@@ -35,11 +35,11 @@ class PortalController extends Controller
     {
         $validated_data = $this->checkEndpoint($request);
 
-        /** @var UraUser $ura_user */
         $ura_user = $guard->user();
         if ($ura_user === null) {
             throw new AccessDeniedException('URA user not found');
         }
+        /** @var UraUser $ura_user */
         $ura = Ura::firstWhere('ura', $ura_user->ura_number);
         if ($ura === null) {
             throw new AccessDeniedException('URA not found');
@@ -57,12 +57,12 @@ class PortalController extends Controller
     {
         $validated_data = $this->checkEndpoint($request);
 
-        /** @var KvkUser $kvk_user */
         $kvk_user = $guard->user();
         if ($kvk_user === null) {
             throw new AccessDeniedException('KVK user not found');
         }
-        $kvk = Kvk::firstWhere('kvk', $guard->user()->kvk_number);
+        /** @var KvkUser $kvk_user */
+        $kvk = Kvk::firstWhere('kvk', $kvk_user->kvk_number);
         if ($kvk === null) {
             throw new AccessDeniedException('KVK not found');
         }
