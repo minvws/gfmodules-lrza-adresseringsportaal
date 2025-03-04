@@ -21,13 +21,25 @@ class PortalController extends Controller
 {
     public function uraIndex(UraAuthGuard $guard): View
     {
-        $ura_user = $guard->user();
+        /** @var UraUser $user */
+        $user = $guard->user();
+        $ura_user = Ura::firstWhere('ura', $user->ura_number);
+        if ($ura_user === null) {
+            throw new AccessDeniedException('URA user not found');
+        }
+
         return view('portals/ura/index')->with('ura_user', $ura_user);
     }
 
     public function kvkIndex(KvkAuthGuard $guard): View
     {
-        $kvk_user = $guard->user();
+        /** @var KvkUser $user */
+        $user = $guard->user();
+        $kvk_user = Kvk::firstWhere('kvk', $user->kvk_number);
+        if ($kvk_user === null) {
+            throw new AccessDeniedException('KVK user not found');
+        }
+
         return view('portals/kvk/index')->with('kvk_user', $kvk_user);
     }
 
