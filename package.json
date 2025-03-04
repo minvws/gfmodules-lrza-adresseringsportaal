@@ -9,8 +9,8 @@
     },
     "devDependencies": {
         "laravel-vite-plugin": "^1.2.0",
-        "sass": "^1.83.1",
-        "vite": "^6.1.1"
+        "sass": "^1.85.1",
+        "vite": "^6.2.0"
     },
     "dependencies": {
         "@minvws/manon": "^17.0.0-beta.2",
