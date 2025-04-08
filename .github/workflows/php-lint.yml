@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   composer-install:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
 
     strategy:
       max-parallel: 3
@@ -38,7 +38,7 @@ jobs:
   php-linting-psalm:
     needs:
       - composer-install
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -62,7 +62,7 @@ jobs:
   php-linting-psr12:
     needs:
       - composer-install
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -84,7 +84,7 @@ jobs:
   php-linting-stan:
     needs:
       - composer-install
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     services:
       postgres:
         image: postgres:12.5
@@ -128,7 +128,7 @@ jobs:
   php-linting-cve:
     needs:
       - composer-install
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
