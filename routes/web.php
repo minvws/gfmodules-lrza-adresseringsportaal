@@ -45,5 +45,11 @@ Route::middleware(['auth:web_kvk'])
         Route::post('index', [PortalController::class, 'kvkEdit'])->name('portal.kvk.edit');
     });
 
-Route::get('/api/suppliers', [ApiController::class, 'getAll'])->name('api.supplier.get_all');
-Route::get('/api/supplier/{supplier_id}', [ApiController::class, 'getOne'])->name('api.supplier.get_one');
+// FHIR-specific routes for Endpoint
+
+Route::prefix('fhir/Endpoint')->group(function () {
+    Route::get('', [ApiController::class, 'getAllEndpoints'])->name('fhir.endpoint.get_all');
+    Route::get('_history', [ApiController::class, 'getEndpointHistory'])->name('fhir.endpoint.history');
+    Route::get('{id}', [ApiController::class, 'getEndpointById'])->name('fhir.endpoint.get_one');
+    Route::get('{id}/_history', [ApiController::class, 'getEndpointHistoryById'])->name('fhir.endpoint.history_by_id');
+});
