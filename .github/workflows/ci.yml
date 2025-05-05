@@ -194,7 +194,7 @@ jobs:
         php-versions: [ '8.2', '8.3', '8.4' ]
     services:
       postgres:
-        image: postgres:12.5
+        image: postgres:15
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
