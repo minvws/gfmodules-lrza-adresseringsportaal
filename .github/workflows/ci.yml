@@ -262,7 +262,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         env:
           WWWUSER: 1000
           WWWGROUP: 1000
