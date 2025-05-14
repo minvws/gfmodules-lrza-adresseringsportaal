@@ -1,3 +1,0 @@
-ALTER TABLE public.suppliers 
-ALTER COLUMN ura_id DROP NOT NULL, 
-ALTER COLUMN kvk_id DROP NOT NULL;

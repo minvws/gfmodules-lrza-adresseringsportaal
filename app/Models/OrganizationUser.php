@@ -4,46 +4,16 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Exceptions\KvkNoKvkNumberException;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Contracts\Auth\Authenticatable;
 use RuntimeException;
 
-class KvkUser implements Authenticatable
+class OrganizationUser implements Authenticatable
 {
-    public string $email;
-    public string $kvk_number;
+    public Organization $organization;
 
-    /**
-     * @param string $kvk_number
-     */
-    public function __construct(string $kvk_number)
+    public function __construct(Organization $organization)
     {
-        $this->kvk_number = $kvk_number;
-        $this->email = $kvk_number . '@kvk.kvk';
-    }
-
-    /**
-     * @param object{
-     *     kvk_number: string,
-     * } $oidcResponse
-     * @throws KvkNoKvkNumberException
-     */
-    public static function deserializeFromObject(object $oidcResponse): ?KvkUser
-    {
-        $requiredKeys = ["kvk_number"];
-        $missingKeys = [];
-        foreach ($requiredKeys as $key) {
-            if (!property_exists($oidcResponse, $key)) {
-                $missingKeys[] = $key;
-            }
-        }
-        if (count($missingKeys) > 0) {
-            Log::error("Kvk user missing required fields: " . implode(", ", $missingKeys));
-            throw new KvkNoKvkNumberException();
-        }
-
-        return new KvkUser($oidcResponse->kvk_number);
+        $this->organization = $organization;
     }
 
     /**
@@ -53,8 +23,9 @@ class KvkUser implements Authenticatable
      */
     public function getName(): string
     {
-        return $this->kvk_number;
+        return $this->organization->getSystem() . '_'  . $this->organization->getIdentifier();
     }
+
 
     /**
      * Get the name of the unique identifier for the user.
@@ -63,7 +34,7 @@ class KvkUser implements Authenticatable
      */
     public function getAuthIdentifierName(): string
     {
-        return $this->kvk_number;
+        return $this->organization->getSystem() . '_'  . $this->organization->getIdentifier();
     }
 
     /**
@@ -73,7 +44,7 @@ class KvkUser implements Authenticatable
      */
     public function getAuthIdentifier(): string
     {
-        return $this->kvk_number;
+        return $this->organization->getSystem() . '_'  . $this->organization->getIdentifier();
     }
 
     /**
@@ -83,7 +54,7 @@ class KvkUser implements Authenticatable
      */
     public function getAuthPassword(): string
     {
-        throw new RuntimeException("Kvk users can't have a password");
+        throw new RuntimeException("users can't have a password");
     }
 
     /**
@@ -119,6 +90,11 @@ class KvkUser implements Authenticatable
 
     public function getDisplayName(): string
     {
-        return $this->kvk_number;
+        return $this->organization->getName();
+    }
+
+    public function getOrganization(): Organization
+    {
+        return $this->organization;
     }
 }

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\ApiController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\IndexController;
@@ -31,25 +30,9 @@ if (config('auth.oidc_mock_enabled')) {
 
 Route::post('logout', LogoutController::class)->name('logout');
 
-Route::middleware(['auth:web_ura'])
-    ->prefix('portal/ura')
+Route::middleware(['auth:web'])
+    ->prefix('portal')
     ->group(function () {
-        Route::get('index', [PortalController::class, 'uraIndex'])->name('portal.ura.index');
-        Route::post('index', [PortalController::class, 'uraEdit'])->name('portal.ura.edit');
+        Route::get('index', [PortalController::class, 'index'])->name('portal.index');
+        Route::post('index', [PortalController::class, 'edit'])->name('portal.edit');
     });
-
-Route::middleware(['auth:web_kvk'])
-    ->prefix('portal/kvk')
-    ->group(function () {
-        Route::get('index', [PortalController::class, 'kvkIndex'])->name('portal.kvk.index');
-        Route::post('index', [PortalController::class, 'kvkEdit'])->name('portal.kvk.edit');
-    });
-
-// FHIR-specific routes for Endpoint
-
-Route::prefix('fhir/Endpoint')->group(function () {
-    Route::get('', [ApiController::class, 'getAllEndpoints'])->name('fhir.endpoint.get_all');
-    Route::get('_history', [ApiController::class, 'getEndpointHistory'])->name('fhir.endpoint.history');
-    Route::get('{id}', [ApiController::class, 'getEndpointById'])->name('fhir.endpoint.get_one');
-    Route::get('{id}/_history', [ApiController::class, 'getEndpointHistoryById'])->name('fhir.endpoint.history_by_id');
-});

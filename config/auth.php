@@ -39,14 +39,7 @@ return [
 
     'guards' => [
         'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-        'web_ura' => [
-            'driver' => 'ura',
-        ],
-        'web_kvk' => [
-            'driver' => 'kvk',
+            'driver' => 'org',
         ],
     ],
 
@@ -71,7 +64,7 @@ return [
         // No provider needed
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Ura::class,
+            'model' => '',
         ],
     ],
 

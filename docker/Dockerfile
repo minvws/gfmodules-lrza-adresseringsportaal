@@ -20,6 +20,8 @@ COPY docker/nginx.conf /etc/nginx/sites-available/default
 RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/init.sh /init.sh
+RUN chmod +x /init.sh
 
 WORKDIR /var/www/html
 
@@ -30,4 +32,4 @@ RUN composer install --optimize-autoloader --no-dev && \
 
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD ["/init.sh"]
