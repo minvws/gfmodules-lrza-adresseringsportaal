@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 
@@ -57,7 +58,7 @@ class EndpointRequest extends FormRequest
                 'required',
                 'url',
                 'max:1024',
-                function ($attribute, $value, $fail) {
+                function (string $attribute, mixed $value, Closure $fail) {
                     $prefixes = ["https://"];
                     if (config('app.allow_insecure_endpoints') === true) {
                         $prefixes[] = "http://";

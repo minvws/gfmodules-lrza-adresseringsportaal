@@ -12,8 +12,8 @@ class HapiService
 {
     protected Client $client;
 
-    public const SYSTEM_URA = 'http://fhir.nl/fhir/NamingSystem/ura';
-    public const SYSTEM_KVK = 'http://www.vzvz.nl/fhir/NamingSystem/kvk';
+    public const string SYSTEM_URA = 'http://fhir.nl/fhir/NamingSystem/ura';
+    public const string SYSTEM_KVK = 'http://www.vzvz.nl/fhir/NamingSystem/kvk';
 
     public function __construct(string $endpoint)
     {
@@ -66,7 +66,7 @@ class HapiService
                 break;
             }
         }
-        if (!$orgEntry) {
+        if ($orgEntry === null) {
             throw new \Exception('Organization not found in HAPI');
         }
 
