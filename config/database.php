@@ -163,8 +163,8 @@ return [
                     'cafile' => env('REDIS_TLS_CAFILE', ''),
                     'local_cert' => env('REDIS_TLS_LOCAL_CERT', ''),
                     'local_pk' => env('REDIS_TLS_LOCAL_PK', ''),
-                ]
-            ]
+                ],
+            ],
         ],
 
         'default' => [
@@ -183,7 +183,7 @@ return [
                 'cafile' => env('REDIS_TLS_CAFILE', ''),
                 'local_cert' => env('REDIS_TLS_LOCAL_CERT', ''),
                 'local_pk' => env('REDIS_TLS_LOCAL_PK', ''),
-            ]
+            ],
         ],
 
         'cache' => [
@@ -202,7 +202,7 @@ return [
                 'cafile' => env('REDIS_TLS_CAFILE', ''),
                 'local_cert' => env('REDIS_TLS_LOCAL_CERT', ''),
                 'local_pk' => env('REDIS_TLS_LOCAL_PK', ''),
-            ]
+            ],
         ],
 
     ],

@@ -11,8 +11,6 @@ use Illuminate\View\Component;
 
 class OldBrowserError extends Component
 {
-
-
     /**
      * Get the view / view contents that represent the component.
      *
