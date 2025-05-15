@@ -11,14 +11,15 @@
     @endif
 
     @session('success')
-    <div class="confirmation" role="group" aria-label="Confirmation">
-        <p>{{ $value }}</p>
-    </div>
+        <div class="confirmation" role="group" aria-label="Confirmation">
+            <p>{{ $value }}</p>
+        </div>
     @endsession
 
     <section class="layout-form">
         <div>
-            <h1>KVK PORTAL PAGE</h1>
+            <h1>PORTAL PAGE</h1>
+            <h2>Organization: {{ $organization->getName() }}</h2>
 
             @foreach ($errors->all() as $message)
                 <div class="error" role="alert">
@@ -26,20 +27,35 @@
                 </div>
             @endforeach
 
-            <form action="{{route('portal.kvk.index')}}" method="post">
+            <form action="{{route('portal.index')}}" method="post">
                 @csrf
+
+                <label for="org_name">Organization</label>
+                <div>
+                    <span class="nota-bene" id="org_name-explanation">
+                        Organization name
+                    </span>
+                    <input
+                        id="org_name"
+                        name="org_name"
+                        type="text"
+                        value="{{ old('org_name') ?? $organization->getName() }}"
+                        aria-describedby="org_name"
+                    />
+                </div>
 
                 <label for="endpoint">Supplier endpoint</label>
                 <div>
                     <span class="nota-bene" id="endpoint-explanation">
                         Enter the endpoint (starting with https://) of the supplier you want to use.
                     </span>
+                    <input type="hidden" name="id" value="{{ count($organization->getEndpoints()) > 0 ? $organization->getEndpoints()[0]->getId() : '' }}"/>
                     <input
                         id="endpoint"
                         name="endpoint"
                         type="text"
-                        value="{{ old('endpoint') ?? $kvk_user->suppliers[0]->endpoint ?? '' }}"
-                        aria-describedby="endpoint-explanation"
+                        value="{{ old('endpoint') ?? (count($organization->getEndpoints()) > 0 ? $organization->getEndpoints()[0]->getAddress() : '') }}"
+                        aria-describedby="endpoint"
                     />
                 </div>
 

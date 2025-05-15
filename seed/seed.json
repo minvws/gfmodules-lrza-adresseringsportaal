@@ -1,0 +1,126 @@
+{
+    "resourceType": "Bundle",
+    "type": "transaction",
+    "entry": [
+        {
+            "request": {
+                "url": "Organization/org-ura-12345001",
+                "method": "PUT"
+            },
+            "resource": {
+                "resourceType": "Organization",
+                "id": "org-ura-12345001",
+                "identifier": [
+                    {
+                        "system": " http://fhir.nl/fhir/NamingSystem/ura",
+                        "value": "12345001"
+                    }
+                ],
+                "name": "Example Organization",
+                "active": true,
+                "type": [
+                    {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+                                "code": "prov",
+                                "display": "Healthcare Provider"
+                            }
+                        ]
+                    }
+                ],
+                "address": [
+                    {
+                        "use": "work",
+                        "line": [
+                            "123 Healthcare Blvd"
+                        ],
+                        "city": "Healthtown",
+                        "state": "HT",
+                        "postalCode": "54321",
+                        "country": "NL"
+                    }
+                ],
+                "endpoint": [
+                    {
+                        "reference": "Endpoint/endpoint-test1-org12345001",
+                        "display": "Test1 FHIR Endpoint for Organization 12345001"
+                    }
+                ]
+            }
+        },
+        {
+            "request": {
+                "url": "Organization/org-kvk-69599084",
+                "method": "PUT"
+            },
+            "resource": {
+                "resourceType": "Organization",
+                "id": "org-kvk-69599084",
+                "identifier": [
+                    {
+                        "system": "http://www.vzvz.nl/fhir/NamingSystem/kvk",
+                        "value": "69599084"
+                    }
+                ],
+                "name": "Dutch Healthcare Company B.V.",
+                "active": true,
+                "type": [
+                    {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+                                "code": "prov",
+                                "display": "Healthcare Provider"
+                            }
+                        ]
+                    }
+                ],
+                "address": [
+                    {
+                        "use": "work",
+                        "line": [
+                            "Kanaalstraat 42"
+                        ],
+                        "city": "Utrecht",
+                        "postalCode": "3513GH",
+                        "country": "NL"
+                    }
+                ]
+            }
+        },
+        {
+            "request": {
+                "url": "Endpoint/endpoint-test1-org12345001",
+                "method": "PUT"
+            },
+            "resource": {
+                "resourceType": "Endpoint",
+                "id": "endpoint-test1-org12345001",
+                "status": "active",
+                "connectionType": {
+                    "system": "http://terminology.hl7.org/CodeSystem/endpoint-connection-type",
+                    "code": "hl7-fhir-rest",
+                    "display": "HL7 FHIR"
+                },
+                "name": "Test1 FHIR Endpoint for Organization 12345001",
+                "managingOrganization": {
+                    "reference": "Organization/org-ura-12345001",
+                    "display": "Example Organization"
+                },
+                "payloadType": [
+                    {
+                        "coding": [
+                            {
+                                "system": "http://hl7.org/fhir/endpoint-payload-type",
+                                "code": "any",
+                                "display": "Any"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
+

@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services\Eherkenning;
 
-use App\Models\UraUser;
+use App\Models\OrganizationUser;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Session\Session;
 
-class UraAuthGuard implements Guard
+class OrganizationAuthGuard implements Guard
 {
-    protected const SESSION_KEY = 'ura_user';
+    protected const SESSION_KEY = 'org_user';
 
     public function __construct(
         protected Session $session,
@@ -31,7 +31,7 @@ class UraAuthGuard implements Guard
         return !$this->check();
     }
 
-    public function user(): UraUser | null
+    public function user(): OrganizationUser | null
     {
         if (!$this->check()) {
             return null;
@@ -42,8 +42,7 @@ class UraAuthGuard implements Guard
 
     public function id(): string | null
     {
-        # @phpstan-ignore-next-line
-        return $this->user()?->ura_number;
+        return $this->user()?->getAuthIdentifier();
     }
 
     /**
@@ -62,6 +61,10 @@ class UraAuthGuard implements Guard
 
     public function setUser(Authenticatable $user): static
     {
+        if (!$user instanceof OrganizationUser) {
+            throw new \InvalidArgumentException('User must be an instance of OrganizationUser');
+        }
+
         $this->session->put(self::SESSION_KEY, $user);
         $this->session->migrate(true);
         return $this;
@@ -81,7 +84,6 @@ class UraAuthGuard implements Guard
 
         $this->clearUserDataFromStorage();
 
-        # @phpstan-ignore-next-line
         $this->events->dispatch(new Logout('oidc', $user));
     }
 

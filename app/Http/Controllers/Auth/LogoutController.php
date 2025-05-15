@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Services\Eherkenning\UraAuthGuard;
+use App\Services\Eherkenning\OrganizationAuthGuard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class LogoutController extends Controller
 {
-    public function __construct(protected UraAuthGuard $guard)
+    public function __construct(protected OrganizationAuthGuard $guard)
     {
     }
 
