@@ -64,7 +64,6 @@ return [
         // No provider needed
         'users' => [
             'driver' => 'eloquent',
-            'model' => '',
         ],
     ],
 

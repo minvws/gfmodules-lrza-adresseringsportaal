@@ -21,7 +21,6 @@ class HapiService
             'base_uri' => $endpoint,
             'timeout'  => 5.0,
             'connect_timeout' => 2.0,
-            'debug' => true,
             'http_errors' => false,
             'headers' => [
                 'Accept' => 'application/json',
