@@ -35,8 +35,6 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           extensions: zip
       - name: Install Dependencies
-        env:
-          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.REPO_READ_ONLY_TOKEN }}"}}'
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
   # ------------------------------------------------------------------------------------
@@ -107,16 +105,6 @@ jobs:
     needs:
       - composer-install
     runs-on: ubuntu-24.04
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: ci_db_test
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v4
@@ -133,14 +121,6 @@ jobs:
       - name: Generate key
         run: php artisan key:generate
       - name: Static analysis with PHPStan
-        env:
-          DB_CONNECTION: pgsql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 5432
-          DB_DATABASE: ci_db_test
-          DB_USERNAME: postgres
-          DB_PASSWORD: postgres
-          DB_SSLMODE: prefer
         run: vendor/bin/phpstan analyse
     strategy:
       max-parallel: 3
@@ -192,16 +172,6 @@ jobs:
       max-parallel: 3
       matrix:
         php-versions: [ '8.3', '8.4' ]
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: ci_db_test
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v4
       - name: Install PHP

@@ -13,7 +13,7 @@ use Illuminate\Contracts\Session\Session;
 
 class OrganizationAuthGuard implements Guard
 {
-    protected const SESSION_KEY = 'org_user';
+    protected const string SESSION_KEY = 'org_user';
 
     public function __construct(
         protected Session $session,
@@ -47,7 +47,7 @@ class OrganizationAuthGuard implements Guard
 
     /**
      * @param array<mixed> $credentials
-     * @return mixed
+     * @return bool
      */
     public function validate(array $credentials = [])
     {
