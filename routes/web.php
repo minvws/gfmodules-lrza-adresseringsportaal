@@ -21,9 +21,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', IndexController::class)->name('index');
-
-Route::post('login/ura', [LoginController::class, 'loginUra'])->name('login.ura');
-Route::post('login/kvk', [LoginController::class, 'loginKvk'])->name('login.kvk');
+Route::get('login', [LoginController::class, 'login'])->name('login');
+Route::post('login', [LoginController::class, 'login'])->name('login.post');
 if (config('auth.oidc_mock_enabled')) {
     Route::get('oidc/login', [DigidMockController::class, 'login'])->name('oidc.login');
 }
@@ -35,4 +34,16 @@ Route::middleware(['auth:web'])
     ->group(function () {
         Route::get('index', [PortalController::class, 'index'])->name('portal.index');
         Route::post('index', [PortalController::class, 'edit'])->name('portal.edit');
+        Route::get('edit-organization', [PortalController::class, 'editOrganization'])
+        ->name('portal.edit-organization');
+        Route::post('edit-organization', [PortalController::class, 'updateOrganization'])
+        ->name('portal.update-organization');
+        Route::get('edit-endpoint', [PortalController::class, 'editEndpoint'])
+        ->name('portal.edit-endpoint');
+        Route::post('edit-endpoint', [PortalController::class, 'updateEndpoint'])
+        ->name('portal.update-endpoint');
+        Route::delete('delete-endpoint', [PortalController::class, 'deleteEndpoint'])
+        ->name('portal.delete-endpoint');
+        Route::delete('delete-organization', [PortalController::class, 'deleteOrganization'])
+        ->name('portal.delete-organization');
     });

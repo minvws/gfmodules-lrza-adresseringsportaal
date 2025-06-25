@@ -22,13 +22,13 @@
                 </div>
             @endforeach
 
-            <form action="{{route('login.ura')}}" method="post">
+            <form action="{{route('login')}}" method="post">
                 @csrf
                 <input type="text" name="ura" value="{{ config('app.default_ura_number') }}"/>
                 <button>Login as an URA user</button>
             </form>
 
-            <form action="{{route('login.kvk')}}" method="post">
+            <form action="{{route('login')}}" method="post">
                 @csrf
                 <input type="text" name="kvk" value="{{ config('app.default_kvk_number') }}"/>
                 <button>Login as an KVK user</button>

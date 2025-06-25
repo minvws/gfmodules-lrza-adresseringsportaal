@@ -23,7 +23,7 @@ class OrganizationUser implements Authenticatable
      */
     public function getName(): string
     {
-        return $this->organization->getSystem() . '_'  . $this->organization->getIdentifier();
+        return $this->organization->getIdentifierSystem() . '_'  . $this->organization->getIdentifierValue();
     }
 
 
@@ -34,7 +34,7 @@ class OrganizationUser implements Authenticatable
      */
     public function getAuthIdentifierName(): string
     {
-        return $this->organization->getSystem() . '_'  . $this->organization->getIdentifier();
+        return $this->organization->getIdentifierSystem() . '_'  . $this->organization->getIdentifierValue();
     }
 
     /**
@@ -44,7 +44,7 @@ class OrganizationUser implements Authenticatable
      */
     public function getAuthIdentifier(): string
     {
-        return $this->organization->getSystem() . '_'  . $this->organization->getIdentifier();
+        return $this->organization->getIdentifierSystem() . '_'  . $this->organization->getIdentifierValue();
     }
 
     /**

@@ -10,6 +10,12 @@
         </section>
     @endif
 
+    @foreach ($errors->all() as $message)
+        <div class="error" role="alert">
+            <p>{{ $message }}</p>
+        </div>
+    @endforeach
+
     @session('success')
         <div class="confirmation" role="group" aria-label="Confirmation">
             <p>{{ $value }}</p>
@@ -19,48 +25,31 @@
     <section class="layout-form">
         <div>
             <h1>PORTAL PAGE</h1>
-            <h2>Organization: {{ $organization->getName() }}</h2>
+            <h3>Available organization: {{ $organization->getName() }}</h3>
 
-            @foreach ($errors->all() as $message)
-                <div class="error" role="alert">
-                    <p>{{ $message }}</p>
-                </div>
-            @endforeach
+            <div class="column-2">
+                <a href="{{ route('portal.edit-organization') }}">
+                    <button type="button">Set up Organization</button>
+                </a>
+                <a href="{{ route('portal.edit-endpoint') }}">
+                    <button type="button">Set up Endpoint</button>
+                </a>
+            </div>
 
-            <form action="{{route('portal.index')}}" method="post">
-                @csrf
-
-                <label for="org_name">Organization</label>
-                <div>
-                    <span class="nota-bene" id="org_name-explanation">
-                        Organization name
-                    </span>
-                    <input
-                        id="org_name"
-                        name="org_name"
-                        type="text"
-                        value="{{ old('org_name') ?? $organization->getName() }}"
-                        aria-describedby="org_name"
-                    />
-                </div>
-
-                <label for="endpoint">Supplier endpoint</label>
-                <div>
-                    <span class="nota-bene" id="endpoint-explanation">
-                        Enter the endpoint (starting with https://) of the supplier you want to use.
-                    </span>
-                    <input type="hidden" name="id" value="{{ count($organization->getEndpoints()) > 0 ? $organization->getEndpoints()[0]->getId() : '' }}"/>
-                    <input
-                        id="endpoint"
-                        name="endpoint"
-                        type="text"
-                        value="{{ old('endpoint') ?? (count($organization->getEndpoints()) > 0 ? $organization->getEndpoints()[0]->getAddress() : '') }}"
-                        aria-describedby="endpoint"
-                    />
-                </div>
-
-                <button type="submit">Verzend</button>
-            </form>
+            <div class="column-2">
+                <form method="POST" action="{{ route('portal.delete-organization') }}" onsubmit="return confirm('Are you sure you want to delete the organization? This will also delete all associated endpoints and cannot be undone.');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" style="background-color: #dc3545; color: white;">Delete Organization</button>
+                </form>
+                @if($organization->getEndpoint())
+                <form method="POST" action="{{ route('portal.delete-endpoint') }}" onsubmit="return confirm('Are you sure you want to delete the endpoint? This action cannot be undone.');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" style="background-color: #dc3545; color: white;">Delete Endpoint</button>
+                </form>
+                @endif
+            </div>
         </div>
     </section>
 @endsection
