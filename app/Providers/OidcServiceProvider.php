@@ -21,9 +21,4 @@ class OidcServiceProvider extends OpenIDConnectServiceProvider
     {
         $this->app->bind(LoginResponseHandlerInterface::class, OidcLoginResponseHandler::class);
     }
-
-    protected function registerRoutes(): void
-    {
-        // We don't want to register the routes from the package, because we want to use our own controller.
-    }
 }

@@ -84,7 +84,7 @@ class OrganizationAuthGuard implements Guard
 
         $this->clearUserDataFromStorage();
 
-        $this->events->dispatch(new Logout('oidc', $user));
+        $this->events->dispatch(new Logout('session', $user));
     }
 
     protected function clearUserDataFromStorage(): void

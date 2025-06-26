@@ -7,6 +7,8 @@ namespace App\Http\Requests;
 use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
+use App\Models\EndpointStatus;
+use App\Models\EndpointConnectionTypes;
 
 class EndpointRequest extends FormRequest
 {
@@ -15,7 +17,7 @@ class EndpointRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() !== null;
     }
 
     /**
@@ -24,14 +26,21 @@ class EndpointRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'org_name.required' => 'Organization name is required',
-            'org_name.min' => 'Organization name must be at least :min character',
-            'org_name.max' => 'Organization name may not be greater than :max characters',
-            'endpoint.required' => 'Endpoint is required',
-            'endpoint.url' => 'Endpoint must be a valid URL',
-            'endpoint.max' => 'Endpoint may not be greater than :max characters',
+            'address.required' => 'Address is required',
+            'address.url' => 'Address must be a valid URL',
+            'address.max' => 'Address may not be greater than :max characters',
+            'status.required' => 'Status is required',
+            'status.in' => 'Status must be one of: :values',
+            'period-start.date_format' => 'Period start must be in ISO 8601 
+            format with timezone (e.g., 2025-06-24T10:30:00+02:00)',
+            'period-end.date_format' => 'Period end must be in ISO 8601
+            format with timezone (e.g., 2025-06-24T10:30:00+02:00)',
+            'period-end.after_or_equal' => 'Period end must be after or equal to period start',
+            'connectionType.required' => 'Connection type is required',
+            'connectionType.in' => 'Connection type must be one of the valid types',
         ];
     }
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -41,20 +50,7 @@ class EndpointRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'org_name' => [
-                'required',
-                'string',
-                'min:1',
-                'max:255',
-            ],
-            'id' => [
-                'string',
-                'nullable',
-                'min:0',
-                'max:255',
-                'regex:/^[A-Za-z0-9\-\.]{1,64}$/',
-            ],
-            'endpoint' => [
+            'address' => [
                 'required',
                 'url',
                 'max:1024',
@@ -64,10 +60,29 @@ class EndpointRequest extends FormRequest
                         $prefixes[] = "http://";
                     }
                     if (!Str::startsWith(strtolower($value), $prefixes)) {
-                        $fail($attribute . ' must start with https://');
+                        $fail($attribute . ' must start with ' . implode(' or ', $prefixes));
                     }
                 },
-            ]
+            ],
+            'status' => [
+                'required',
+                'string',
+                'in:' . implode(',', array_column(EndpointStatus::cases(), 'value')),
+            ],
+            'period-start' => [
+                'nullable',
+                'date_format:Y-m-d\TH:i:sP', // ISO 8601 format with timezone
+            ],
+            'period-end' => [
+                'nullable',
+                'date_format:Y-m-d\TH:i:sP', // ISO 8601 format with timezone
+                'after_or_equal:period-start',
+            ],
+            'connectionType' => [
+                'required',
+                'string',
+                'in:' . implode(',', EndpointConnectionTypes::getCodes()),
+            ],
         ];
     }
 }

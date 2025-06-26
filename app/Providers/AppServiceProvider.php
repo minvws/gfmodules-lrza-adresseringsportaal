@@ -38,7 +38,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function bootAuth(): void
     {
-        Auth::extend('org', function (Application $app, string $name, array $config) {
+        Auth::extend('session', function (Application $app, string $name, array $config) {
             return new OrganizationAuthGuard($app->make('session')->driver(), $app->make('events'));
         });
     }
