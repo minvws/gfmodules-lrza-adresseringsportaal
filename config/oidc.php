@@ -107,7 +107,7 @@ return [
         /**
          * Enable or disable the login route.
          */
-        'enabled' => env('OIDC_LOGIN_ROUTE_ENABLED', true),
+        'enabled' => env('OIDC_ENABLED', true) == true,
 
         /**
          * The url of the login route.

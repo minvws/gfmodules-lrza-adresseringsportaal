@@ -7,26 +7,35 @@ namespace App\Models;
 class Organization
 {
     protected string $id;
+    protected bool $active = true;
     protected string $name;
-    protected string $system;
-    protected string $identifier;
-    /** @var Endpoint[] */
-    protected array $endpoints = [];
+    protected string $identifierSystem;
+    protected string $identifierValue;
+    protected ?Endpoint $endpoint = null;
+    protected ?ContactPoint $telecom = null;
 
     /**
      * @param string $id
      * @param string $name
-     * @param string $system
-     * @param string $identifier
-     * @param Endpoint[] $endpoints
+     * @param string $identifierSystem
+     * @param string $identifierValue
+     * @param ?Endpoint $endpoint
+     * @param ?ContactPoint $telecom
      */
-    public function __construct(string $id, string $name, string $system, string $identifier, array $endpoints)
-    {
+    public function __construct(
+        string $id,
+        string $name,
+        string $identifierSystem,
+        string $identifierValue,
+        ?Endpoint $endpoint = null,
+        ?ContactPoint $telecom = null
+    ) {
         $this->id = $id;
         $this->name = $name;
-        $this->system = $system;
-        $this->identifier = $identifier;
-        $this->endpoints = $endpoints;
+        $this->identifierSystem = $identifierSystem;
+        $this->identifierValue = $identifierValue;
+        $this->endpoint = $endpoint;
+        $this->telecom = $telecom;
     }
 
     public function getId(): string
@@ -34,27 +43,32 @@ class Organization
         return $this->id;
     }
 
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function getSystem(): string
+    public function getIdentifierSystem(): string
     {
-        return $this->system;
+        return $this->identifierSystem;
     }
 
-    public function getIdentifier(): string
+    public function getidentifierValue(): string
     {
-        return $this->identifier;
+        return $this->identifierValue;
     }
 
     /**
-     * @return Endpoint[]
+     * @return Endpoint|null
      */
-    public function getEndpoints(): array
+    public function getEndpoint(): ?Endpoint
     {
-        return $this->endpoints;
+        return $this->endpoint;
     }
 
     public function updateName(string $name): void
@@ -62,22 +76,38 @@ class Organization
         $this->name = $name;
     }
 
-    public function addEndpoint(Endpoint $endpoint): void
+    public function setEndpoint(?Endpoint $endpoint): void
     {
-        // Update if endpoint already exists, otherwise add
-        foreach ($this->endpoints as $key => $existingEndpoint) {
-            if ($existingEndpoint->getId() === $endpoint->getId()) {
-                $this->endpoints[$key] = $endpoint;
-                return;
-            }
-        }
-
-        $this->endpoints[] = $endpoint;
+        $this->endpoint = $endpoint;
     }
 
-    public function removeEndpoint(Endpoint $endpoint): void
+    public function removeEndpoint(): void
     {
-        $this->endpoints = array_filter($this->endpoints, fn($e) => $e->getId() !== $endpoint->getId());
+        $this->endpoint = null;
+    }
+
+    /**
+     * @return ?ContactPoint
+     */
+    public function getTelecom(): ?ContactPoint
+    {
+        return $this->telecom;
+    }
+
+    /**
+     * @param ?ContactPoint $telecom
+     */
+    public function setTelecom(?ContactPoint $telecom): void
+    {
+        $this->telecom = $telecom;
+    }
+
+    /**
+     * Clear telecom contact point
+     */
+    public function clearTelecom(): void
+    {
+        $this->telecom = null;
     }
 
     /**
@@ -85,9 +115,10 @@ class Organization
      */
     public function toFhir(): array
     {
-        $endpoints = [];
-        foreach ($this->getEndpoints() as $endpoint) {
-            $endpoints[] = [
+        $fhirEndpoint = [];
+        $endpoint = $this->getEndpoint();
+        if ($endpoint !== null) {
+            $fhirEndpoint = [
                 'reference' => 'Endpoint/' . $endpoint->getId(),
                 'display' => $endpoint->getAddress(),
             ];
@@ -96,15 +127,71 @@ class Organization
         return [
             'resourceType' => 'Organization',
             'id' => $this->getId(),
-            'active' => true,
+            'active' => $this->active,
+            'name' => $this->getName(),
             'identifier' => [
                 [
-                    'system' => $this->getSystem(),
-                    'value' => $this->getIdentifier(),
+                    'system' => $this->getIdentifierSystem(),
+                    'value' => $this->getidentifierValue(),
                 ],
             ],
-            'name' => $this->getName(),
-            'endpoint' => $endpoints,
+            'telecom' => $this->getTelecom() ? [$this->getTelecom()->toFhir()] : [],
+            'endpoint' => $fhirEndpoint,
         ];
+    }
+
+    /**
+     * Create Organization from FHIR array data
+     *
+     * @param array<string, mixed> $organizationData
+     * @param array<string, mixed> $endpointData
+     *
+     * @return self
+     */
+    public static function fromFhir(array $organizationData, ?array $endpointData): self
+    {
+        $id = $organizationData['id'] ?? '';
+        $name = $organizationData['name'] ?? '';
+
+        // Parse type array
+        $type = [];
+        if (isset($organizationData['type']) && is_array($organizationData['type'])) {
+            foreach ($organizationData['type'] as $typeData) {
+                $type[] = CodeableConcept::fromFhir($typeData);
+            }
+        }
+
+        // Parse identifier to get endpoint identifier system and value
+        $identifierSystem = '';
+        $identifierValue = '';
+        if (isset($organizationData['identifier']) && is_array($organizationData['identifier'])) {
+            foreach ($organizationData['identifier'] as $identifier) {
+                if (isset($identifier['system']) && isset($identifier['value'])) {
+                    $identifierSystem = $identifier['system'];
+                    $identifierValue = $identifier['value'];
+                    break; // Use the first identifier found
+                }
+            }
+        }
+
+        $endpoint = $endpointData ? Endpoint::fromFhir($endpointData) : null;
+
+        // Parse telecom (take first contact point only)
+        $telecom = null;
+        if (
+            isset($organizationData['telecom']) && is_array($organizationData['telecom'])
+            && !empty($organizationData['telecom'])
+        ) {
+            $telecom = ContactPoint::fromFhir($organizationData['telecom'][0]);
+        }
+
+        return new self(
+            $id,
+            $name,
+            $identifierSystem,
+            $identifierValue,
+            $endpoint,
+            $telecom
+        );
     }
 }

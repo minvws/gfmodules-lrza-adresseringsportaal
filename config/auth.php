@@ -38,7 +38,7 @@ return [
 
     'guards' => [
         'web' => [
-            'driver' => 'org',
+            'driver' => 'session',
         ],
     ],
 
@@ -102,12 +102,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Digid mock enabled
+    | Oidc mock enabled
     |--------------------------------------------------------------------------
     |
-    | Here you may define if the digid mock is enabled or not.
+    | Here you may define if the oidc mock is enabled or not.
     |
     */
 
-    'oidc_mock_enabled' => env('OIDC_MOCK_ENABLED', false),
+    'oidc_enabled' => env('OIDC_ENABLED', false),
 ];
