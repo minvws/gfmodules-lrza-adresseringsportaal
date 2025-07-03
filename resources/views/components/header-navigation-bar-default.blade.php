@@ -16,12 +16,6 @@
         @auth
         <ul>
             <li>
-                <span>
-                @auth
-                    Organization: {{ Auth::user()->getOrganization()->getName() }}
-                @endauth
-                </span>
-
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
                     <button type="submit">@lang('Logout')</button>

@@ -1,6 +1,8 @@
 @extends('layouts.guest')
 
 @section('content')
+<section>
+    <div>
     @if (session()->has('error'))
         <section role="alert" class="error no-print" aria-label="{{ __('error') }}">
             <div>
@@ -22,34 +24,42 @@
         </div>
     @endsession
 
-    <section class="layout-form">
-        <div>
             <h1>PORTAL PAGE</h1>
             <h3>Available organization: {{ $organization->getName() }}</h3>
 
             <div class="column-2">
-                <a href="{{ route('portal.edit-organization') }}">
-                    <button type="button">Set up Organization</button>
+                <div>
+                <a class="button" href="{{ route('portal.edit-organization') }}">
+                    Set up Organization
                 </a>
-                <a href="{{ route('portal.edit-endpoint') }}">
-                    <button type="button">Set up Endpoint</button>
-                </a>
-            </div>
-
-            <div class="column-2">
-                <form method="POST" action="{{ route('portal.delete-organization') }}" onsubmit="return confirm('Are you sure you want to delete the organization? This will also delete the associated endpoint and cannot be undone.');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" style="background-color: #dc3545; color: white;">Delete Organization</button>
+                <button href="{{ route('portal.delete-organization') }}"
+                    class="destructive"
+                    onclick="event.preventDefault(); if(confirm('Are you sure you want to delete the organization? This will also delete the associated endpoint and cannot be undone.')) { document.getElementById('delete-organization-form').submit(); }">
+                     Delete Organization
+                </button>
+                <form id="delete-organization-form" method="POST" action="{{ route('portal.delete-organization') }}" style="display: none;">
+                     @csrf
+                     @method('DELETE')
                 </form>
+                </div>
+                <div>
+                <a class="button" href="{{ route('portal.edit-endpoint') }}">
+                    Set up Endpoint
+                </a>
                 @if($organization->getEndpoint())
-                <form method="POST" action="{{ route('portal.delete-endpoint') }}" onsubmit="return confirm('Are you sure you want to delete the endpoint? This action cannot be undone.');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" style="background-color: #dc3545; color: white;">Delete Endpoint</button>
+
+                <button href="{{ route('portal.delete-endpoint') }}"
+                    class="destructive"
+                    onclick="event.preventDefault(); if(confirm('Are you sure you want to delete the endpoint? This action cannot be undone.')) { document.getElementById('delete-endpoint-form').submit(); }">
+                     Delete Endpoint
+                </button>
+                <form id="delete-endpoint-form" method="POST" action="{{ route('portal.delete-endpoint') }}" style="display: none;">
+                     @csrf
+                     @method('DELETE')
                 </form>
                 @endif
             </div>
         </div>
-    </section>
+</div>
+</section>
 @endsection
