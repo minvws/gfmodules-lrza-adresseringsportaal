@@ -1,6 +1,6 @@
 # GFModules Portal Register
 
-This app is the portal-register and is part of the 'Generieke Functies, lokalisatie en addressering' project of the Ministry of Health, Welfare and Sport of the Dutch government. The purpose of this application is to make it possible for users to create and set up an FHIR Organization and Endpoint for their own organization. This allows users to register their [mCSD Directory](https://profiles.ihe.net/ITI/mCSD/CapabilityStatement-IHE.mCSD.Directory.html) so that it can be reached by the [update-client](https://github.com/minvws/gfmodules-mcsd-update-client).
+This app is the Portal Register and is part of the 'Generieke Functies, lokalisatie en addressering' project of the Ministry of Health, Welfare and Sport of the Dutch government. The purpose of this application is for Healthcare Organizations to get published mCSD Directories from this Portal Register which they can use this to contact these directories directly or to build their own composed mCSD Directory with the use of the [update-client](https://github.com/minvws/gfmodules-mcsd-update-client). HealthCare organizations can publish their [mCSD Directory](https://profiles.ihe.net/ITI/mCSD/CapabilityStatement-IHE.mCSD.Directory.html) with addressing information at this register.
 
 ## Disclaimer
 
