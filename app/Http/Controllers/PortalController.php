@@ -132,9 +132,9 @@ class PortalController extends Controller
         }
 
         $organization = $user->getOrganization();
-        $oldEndpoint = $organization->getEndpoint();
+        $existingEndpoint = $organization->getEndpoint();
         $endpoint = new Endpoint( // Generate a new UUID if no old endpoint exists
-            id: $oldEndpoint ? $oldEndpoint->getId() : (string)Uuid::v4(),
+            id: $existingEndpoint ? $existingEndpoint->getId() : (string)Uuid::v4(),
             address: $validated_data['address'],
             status: EndpointStatus::from($validated_data['status']),
             period: $period,
