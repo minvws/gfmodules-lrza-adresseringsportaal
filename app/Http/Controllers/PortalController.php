@@ -131,8 +131,10 @@ class PortalController extends Controller
             );
         }
 
-        $endpoint = new Endpoint(
-            id: (string)Uuid::v4(),
+        $organization = $user->getOrganization();
+        $existingEndpoint = $organization->getEndpoint();
+        $endpoint = new Endpoint( // Generate a new UUID if no old endpoint exists
+            id: $existingEndpoint ? $existingEndpoint->getId() : (string)Uuid::v4(),
             address: $validated_data['address'],
             status: EndpointStatus::from($validated_data['status']),
             period: $period,
@@ -141,10 +143,8 @@ class PortalController extends Controller
                 code: $validated_data['connectionType'],
                 display: EndpointConnectionTypes::getDisplayNameByCode($validated_data['connectionType'])
             ),
-            managingOrgId: $user->getOrganization()->getId(),
+            managingOrgId: $organization->getId(),
         );
-
-        $organization = $user->getOrganization();
 
         $this->hapiService->updateEndpoint($endpoint);
         $organization->setEndpoint($endpoint);
@@ -152,7 +152,7 @@ class PortalController extends Controller
 
         return redirect()
             ->route('portal.index')
-            ->with('success', 'Organization information is updated successfully');
+            ->with('success', 'Endpoint information is updated successfully');
     }
 
     public function deleteEndpoint(): RedirectResponse

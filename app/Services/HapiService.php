@@ -184,7 +184,10 @@ class HapiService
 
     public function deleteOrganizationWithEndpoint(Organization $organization): void
     {
+        $this->checkIfOrganizationRegistered($organization->getId());
         if ($organization->getEndpoint() !== null) {
+            $this->checkIfEndpointRegistered($organization->getEndpoint()->getId());
+
             $endpoint = $organization->getEndpoint();
 
             $organization->setEndpoint(null);
@@ -198,13 +201,42 @@ class HapiService
 
     public function deleteEndpointFromOrganization(Organization $organization): void
     {
+        $this->checkIfOrganizationRegistered($organization->getId());
         if ($organization->getEndpoint() !== null) {
             $endpoint = $organization->getEndpoint();
+            $this->checkIfEndpointRegistered($endpoint->getId());
 
             $organization->setEndpoint(null);
             $this->updateOrganization($organization);
 
             $this->deleteEndpoint($endpoint->getId());
+        }
+    }
+
+    /**
+     * Functions to check if the HAPI registered the changes
+     * Sometimes the HAPI server is a little slow to act.
+     * These functions check if organization or endpoint actually are registered.
+     */
+    public function checkIfOrganizationRegistered(string $organizationId): void
+    {
+        $response = $this->client->get("/fhir/Organization/{$organizationId}");
+        if ($response->getStatusCode() !== 200) {
+            throw HapiHttpException::create(
+                $response->getStatusCode(),
+                (string)$response->getBody()
+            );
+        }
+    }
+
+    public function checkIfEndpointRegistered(string $endpointId): void
+    {
+        $response = $this->client->get("/fhir/Endpoint/{$endpointId}");
+        if ($response->getStatusCode() !== 200) {
+             throw HapiHttpException::create(
+                 $response->getStatusCode(),
+                 (string)$response->getBody()
+             );
         }
     }
 }
