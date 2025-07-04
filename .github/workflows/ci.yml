@@ -231,19 +231,16 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
 
+      - name: Pre-build frontend
+        run: |
+          npm ci
+          npm run build
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
-        env:
-          WWWUSER: 1000
-          WWWGROUP: 1000
-          LARAVEL_SAIL: 1
         with:
-          context: ./vendor/laravel/sail/runtimes/8.3
-          file: ./vendor/laravel/sail/runtimes/8.3/Dockerfile
+          context: .
+          file: ./docker/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            WWWUSER=${{ env.WWWUSER }}
-            WWWGROUP=${{ env.WWWGROUP }}
-            LARAVEL_SAIL=${{ env.LARAVEL_SAIL }}
