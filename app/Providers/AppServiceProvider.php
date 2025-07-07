@@ -8,6 +8,7 @@ use App\Services\Eherkenning\OrganizationAuthGuard;
 use App\Services\HapiService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (config('app.force_https')) {
+            URL::forceScheme('https');
+        }
+
         $this->app->singleton(HapiService::class, function (Application $app) {
             return new HapiService(config('hapi.endpoint'));
         });

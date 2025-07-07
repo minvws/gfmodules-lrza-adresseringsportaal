@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 return [
 
+
+    'force_https' => env('FORCE_HTTPS', false),
     'allow_insecure_endpoints' => env('ALLOW_INSECURE_ENDPOINTS', false),
     'default_kvk_number' => env('DEFAULT_KVK_NUMBER', ''),
 
