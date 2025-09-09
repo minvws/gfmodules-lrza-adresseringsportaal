@@ -44,6 +44,11 @@
                     "reference": "Organization/org-kvk-69599084",
                     "display": "Example Organization"
                 },
+                "payloadType": [
+                    {
+                        "text": "mCSD resource"
+                    }
+                ],
                 "address": "http://localhost:8080/fhir"
             }
         }

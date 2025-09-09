@@ -134,6 +134,7 @@ class HapiService
                 code: 'hl7-fhir-rest',
                 display: 'HL7 FHIR'
             ),
+            payloadType: [['text' => 'mCSD resource']],
             period: null,
         );
         $response = $this->client->put('/fhir/Endpoint', [

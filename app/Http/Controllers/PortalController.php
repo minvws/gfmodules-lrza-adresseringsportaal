@@ -144,6 +144,7 @@ class PortalController extends Controller
                 display: EndpointConnectionTypes::getDisplayNameByCode($validated_data['connectionType'])
             ),
             managingOrgId: $organization->getId(),
+            payloadType: [['text' => 'mCSD resource']] // Default payload type
         );
 
         $this->hapiService->updateEndpoint($endpoint);

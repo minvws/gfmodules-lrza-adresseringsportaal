@@ -12,7 +12,14 @@ class Endpoint
     protected string $managingOrgId;
     protected ?Period $period;
     protected string $address;
+    /**
+     * @var array<int, array<string, string>> $payloadType
+     */
+    protected array $payloadType = [];
 
+    /**
+     * @param array<int, array<string, string>> $payloadType
+     */
     public function __construct(
         string $id,
         string $address,
@@ -20,6 +27,7 @@ class Endpoint
         EndpointStatus $status,
         Coding $connectionType,
         ?Period $period,
+        array $payloadType = []
     ) {
         $this->id = $id;
         $this->address = $address;
@@ -27,6 +35,23 @@ class Endpoint
         $this->status = $status;
         $this->connectionType = $connectionType;
         $this->period = $period;
+        $this->payloadType = $payloadType;
+    }
+
+    /**
+     * @return array<int, array<string, string>>
+     */
+    public function getPayloadType(): array
+    {
+        return $this->payloadType;
+    }
+
+    /**
+     * @param array<int, array<string, string>> $payloadType
+     */
+    public function setPayloadType(array $payloadType): void
+    {
+        $this->payloadType = $payloadType;
     }
 
     public function getPeriod(): ?Period
@@ -95,6 +120,7 @@ class Endpoint
                 'reference' => 'Organization/' . $this->getManagingOrgId(),
                 'display' => $this->getManagingOrgId(),
             ],
+            'payloadType' => $this->getPayloadType(),
             'address' => $this->getAddress(),
             'period' => $this->getPeriod() ? $this->getPeriod()->toFhir() : null,
         ];
@@ -147,6 +173,12 @@ class Endpoint
             $period = Period::fromFhir($data['period']);
         }
 
+        // Parse payload type
+        $payloadType = [];
+        if (isset($data['payloadType']) && is_array($data['payloadType'])) {
+            $payloadType = $data['payloadType'];
+        }
+
         return new self(
             $id,
             $address,
@@ -154,6 +186,7 @@ class Endpoint
             $status,
             $connectionType,
             $period,
+            $payloadType
         );
     }
 }
