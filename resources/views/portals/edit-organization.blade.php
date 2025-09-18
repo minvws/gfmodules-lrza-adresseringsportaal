@@ -31,6 +31,12 @@
                 <input type="hidden" name="id" value="{{ $organization->getId() }}">
 
                 <div class="form-group">
+                    <label for="ura_identifier">URA Identifier (max 8 digits)</label>
+                    <input type="text" id="ura_identifier" name="ura_identifier" value="{{ old('ura_identifier', $organization->getUraIdentifier()) }}" maxlength="8" pattern="[0-9]{1,8}" required placeholder="e.g. 12345678">
+                    <input type="hidden" name="ura_identifier_system" value="http://fhir.nl/fhir/NamingSystem/ura" />
+                </div>
+
+                <div class="form-group">
                     <label for="org_name">Organization Name</label>
                     <input type="text" id="org_name" name="org_name" value="{{ old('org_name', $organization->getName()) }}" required>
                 </div>

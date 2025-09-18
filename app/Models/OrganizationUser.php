@@ -23,7 +23,8 @@ class OrganizationUser implements Authenticatable
      */
     public function getName(): string
     {
-        return $this->organization->getIdentifierSystem() . '_'  . $this->organization->getIdentifierValue();
+        return $this->organization->getKvkIdentifier()
+        ?? throw new RuntimeException("Organization has no KVK identifier");
     }
 
 
@@ -34,7 +35,8 @@ class OrganizationUser implements Authenticatable
      */
     public function getAuthIdentifierName(): string
     {
-        return $this->organization->getIdentifierSystem() . '_'  . $this->organization->getIdentifierValue();
+        return $this->organization->getKvkIdentifier()
+        ?? throw new RuntimeException("Organization has no KVK identifier");
     }
 
     /**
@@ -44,7 +46,8 @@ class OrganizationUser implements Authenticatable
      */
     public function getAuthIdentifier(): string
     {
-        return $this->organization->getIdentifierSystem() . '_'  . $this->organization->getIdentifierValue();
+        return $this->organization->getKvkIdentifier()
+        ?? throw new RuntimeException("Organization has no KVK identifier");
     }
 
     /**

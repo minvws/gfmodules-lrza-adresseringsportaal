@@ -57,6 +57,10 @@ class PortalController extends Controller
         $organization = $user->getOrganization();
         $organization->setName($validated_data['org_name']);
 
+        if (isset($validated_data['ura_identifier'])) {
+            $organization->setUraIdentifier($validated_data['ura_identifier']);
+        }
+
         // Handle telecom contact point
         $telecom = $this->createContactPointFromValidatedData($validated_data);
         $organization->setTelecom($telecom);

@@ -60,7 +60,9 @@ class HapiService
         }
 
         if (!isset($data['entry']) || !is_array($data['entry'])) {
-            throw InvalidResponseException::create('Invalid response structure');
+            throw InvalidResponseException::create(
+                'Invalid response structure: please wait till the HAPI server is ready'
+            );
         }
 
         $endpoint = null;
@@ -93,8 +95,12 @@ class HapiService
         $org = new Organization(
             id: 'Org-' . $id,
             name: 'Org-' . $id,
-            identifierSystem: $system,
-            identifierValue: $id,
+            identifiers: [
+                [
+                    'system' => $system,
+                    'value' => $id,
+                ],
+            ],
             endpoint: null
         );
         $response = $this->client->put('/fhir/Organization/' . $org->getId(), [
