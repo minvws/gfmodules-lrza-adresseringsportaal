@@ -6,34 +6,36 @@ namespace App\Models;
 
 class Organization
 {
+    public const SYSTEM_KVK = 'http://fhir.nl/fhir/NamingSystem/kvk';
+    public const SYSTEM_URA = 'http://fhir.nl/fhir/NamingSystem/ura';
+
     protected string $id;
     protected bool $active = true;
     protected string $name;
-    protected string $identifierSystem;
-    protected string $identifierValue;
+    /**
+     * @var array<int, array{system: string, value: string}>
+    */
+    protected array $identifiers = [];
     protected ?Endpoint $endpoint = null;
     protected ?ContactPoint $telecom = null;
 
     /**
      * @param string $id
      * @param string $name
-     * @param string $identifierSystem
-     * @param string $identifierValue
+     * @param array<int, array{system: string, value: string}> $identifiers
      * @param ?Endpoint $endpoint
      * @param ?ContactPoint $telecom
      */
     public function __construct(
         string $id,
         string $name,
-        string $identifierSystem,
-        string $identifierValue,
+        array $identifiers,
         ?Endpoint $endpoint = null,
         ?ContactPoint $telecom = null
     ) {
         $this->id = $id;
         $this->name = $name;
-        $this->identifierSystem = $identifierSystem;
-        $this->identifierValue = $identifierValue;
+        $this->identifiers = $identifiers;
         $this->endpoint = $endpoint;
         $this->telecom = $telecom;
     }
@@ -53,14 +55,76 @@ class Organization
         return $this->name;
     }
 
-    public function getIdentifierSystem(): string
+    /**
+     * Get all identifiers
+     * @return array<int, array{system: string, value: string}>
+     */
+    public function getIdentifiers(): array
     {
-        return $this->identifierSystem;
+        return $this->identifiers;
     }
 
-    public function getidentifierValue(): string
+    /**
+     * Get KVK identifier value
+     */
+    public function getKvkIdentifier(): ?string
     {
-        return $this->identifierValue;
+        foreach ($this->identifiers as $identifier) {
+            if ($identifier['system'] === self::SYSTEM_KVK) {
+                return $identifier['value'];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get URA identifier value
+     */
+    public function getUraIdentifier(): ?string
+    {
+        foreach ($this->identifiers as $identifier) {
+            if ($identifier['system'] === self::SYSTEM_URA) {
+                return $identifier['value'];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Set URA identifier (can be updated)
+     */
+    public function setUraIdentifier(string $value): void
+    {
+        $found = false;
+        foreach ($this->identifiers as &$identifier) {
+            if ($identifier['system'] === self::SYSTEM_URA) {
+                $identifier['value'] = $value;
+                $found = true;
+                break;
+            }
+        }
+        if (!$found) {
+            $this->identifiers[] = [
+                'system' => self::SYSTEM_URA,
+                'value' => $value,
+            ];
+        }
+    }
+
+    /**
+     * Set KVK identifier (only if not already set)
+     */
+    public function setKvkIdentifier(string $value): void
+    {
+        foreach ($this->identifiers as $identifier) {
+            if ($identifier['system'] === self::SYSTEM_KVK) {
+                return; // Immutable after creation
+            }
+        }
+        $this->identifiers[] = [
+            'system' => self::SYSTEM_KVK,
+            'value' => $value,
+        ];
     }
 
     /**
@@ -124,17 +188,19 @@ class Organization
             ];
         }
 
+        $identifiers = [];
+        foreach ($this->getIdentifiers() as $identifier) {
+            $identifiers[] = [
+                'system' => $identifier['system'],
+                'value' => $identifier['value'],
+            ];
+        }
         return [
             'resourceType' => 'Organization',
             'id' => $this->getId(),
             'active' => $this->active,
             'name' => $this->getName(),
-            'identifier' => [
-                [
-                    'system' => $this->getIdentifierSystem(),
-                    'value' => $this->getidentifierValue(),
-                ],
-            ],
+            'identifier' => $identifiers,
             'telecom' => $this->getTelecom() ? [$this->getTelecom()->toFhir()] : [],
             'endpoint' => $fhirEndpoint,
         ];
@@ -161,15 +227,15 @@ class Organization
             }
         }
 
-        // Parse identifier to get endpoint identifier system and value
-        $identifierSystem = '';
-        $identifierValue = '';
+        // Parse identifiers
+        $identifiers = [];
         if (isset($organizationData['identifier']) && is_array($organizationData['identifier'])) {
             foreach ($organizationData['identifier'] as $identifier) {
                 if (isset($identifier['system']) && isset($identifier['value'])) {
-                    $identifierSystem = $identifier['system'];
-                    $identifierValue = $identifier['value'];
-                    break; // Use the first identifier found
+                    $identifiers[] = [
+                        'system' => $identifier['system'],
+                        'value' => $identifier['value'],
+                    ];
                 }
             }
         }
@@ -188,8 +254,7 @@ class Organization
         return new self(
             $id,
             $name,
-            $identifierSystem,
-            $identifierValue,
+            $identifiers,
             $endpoint,
             $telecom
         );

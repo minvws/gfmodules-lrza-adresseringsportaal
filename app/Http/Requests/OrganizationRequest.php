@@ -49,6 +49,11 @@ class OrganizationRequest extends FormRequest
                 'max:255',
                 'regex:/^[A-Za-z0-9\-\.]{1,64}$/',
             ],
+            'ura_identifier' => [
+                'required',
+                'digits_between:1,8',
+                'regex:/^[0-9]+$/',
+            ],
             'telecom.system' => 'nullable|string|in:phone,fax,email,pager,url,sms,other',
             'telecom.value' => 'nullable|string|max:255',
             'telecom.use' => 'nullable|string|in:work,temp,old,mobile',
