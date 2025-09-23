@@ -5,7 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Config;
 
-return Application::configure(basePath: dirname(__DIR__))
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         health: '/up',
@@ -22,3 +22,5 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->create();
+$app->useEnvironmentPath(getenv('APP_ENV_PATH') ?: '');
+return $app;
