@@ -32,7 +32,9 @@ Requirements:
 Run the following commands to run this application in docker using ```sail```.
 
 ```bash
+cp .env.example .env
 composer install
+npm install
 npm run build
 vendor/bin/sail up -d
 vendor/bin/sail artisan key:generate
@@ -53,5 +55,7 @@ Make sure you build the frontend assets locally first:
     make container-build
     
     # Run container
-    docker run -ti --rm -p 8201:80 --mount type=bind,source=./.env,target=/var/www/html/.env gfmodules-portal-register:latest
+    docker run -ti --rm -p 8512:80 --mount type=bind,source=./.env,target=/var/www/html/.env gfmodules-lrza-adresseringsportaal:latest
 ```
+
+The application will be available on port 8512.
