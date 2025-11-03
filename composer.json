@@ -1,7 +1,7 @@
 {
-    "name": "minvws/gfmodules-portal-register",
+    "name": "minvws/gfmodules-lrza-adresseringsportaal",
     "type": "project",
-    "description": "GFModules Portal Register",
+    "description": "GFModules LRZA Adresseringsportaal",
     "license": "EUPL-1.2",
     "require": {
         "php": "^8.3.0",

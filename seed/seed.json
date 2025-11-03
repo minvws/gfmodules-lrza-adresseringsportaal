@@ -14,6 +14,10 @@
                     {
                         "system": "http://www.vzvz.nl/fhir/NamingSystem/kvk",
                         "value": "69599084"
+                    },
+                    {
+                        "system": "http://fhir.nl/fhir/NamingSystem/ura",
+                        "value": "23665292"
                     }
                 ],
                 "name": "Example Organization",

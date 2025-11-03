@@ -22,7 +22,7 @@ run: ## Run the project
 	php artisan serve --port=9000
 
 container-build: ## Build the standalone container
-	docker build . -t gfmodules-portal-register --file ./docker/Dockerfile
+	docker build . -t gfmodules-lrza-adresseringsportaal --file ./docker/Dockerfile
 
 
 test: test-php test-js ## Runs tests
