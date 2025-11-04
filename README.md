@@ -38,6 +38,9 @@ vendor/bin/sail up -d
 vendor/bin/sail artisan key:generate
 ```
 
+This application requires an instance of a [HAPI](https://github.com/hapifhir/hapi-fhir) server running with it. 
+Make sure that the correct URL is set for in the env file. See [env.example](https://github.com/minvws/gfmodules-lrza-adresseringsportaal-private/blob/ba9ae5748468da5758734ebeafb2f24b7dd24389/.env.example#L30)
+
 ## Run on docker
 
 It's possible to do a standalone run of the application using docker. This docker container will have the laravel application running on an nginx webserver running on port 80.
