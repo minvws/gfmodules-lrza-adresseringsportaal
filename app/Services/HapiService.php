@@ -10,15 +10,19 @@ use App\Exceptions\OrganizationNotFoundException;
 use App\Models\Endpoint;
 use App\Models\Organization;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
+use Psr\Http\Message\ResponseInterface;
 
 class HapiService
 {
     protected Client $client;
+    protected string $endpoint;
 
     public const string SYSTEM_KVK = 'http://www.vzvz.nl/fhir/NamingSystem/kvk';
 
     public function __construct(string $endpoint)
     {
+        $this->endpoint = $endpoint;
         $this->client = new Client([
             'base_uri' => $endpoint,
             'timeout'  => 5.0,
@@ -31,15 +35,48 @@ class HapiService
         ]);
     }
 
+    /**
+     * Make HTTP request and catch connection exceptions
+     *
+     * @param string $method HTTP method (GET, POST, PUT, DELETE)
+     * @param string $endpoint The endpoint path
+     * @param array<string, mixed>|null $data Optional JSON data
+     * @return ResponseInterface
+     * @throws \Exception
+     */
+    public function makeRequest(string $method, string $endpoint, ?array $data = null): ResponseInterface
+    {
+        $options = [];
+        if ($data !== null) {
+            $options['json'] = $data;
+        }
+
+        try {
+            return match (strtoupper($method)) {
+                'GET' => $this->client->get($endpoint, $options),
+                'POST' => $this->client->post($endpoint, $options),
+                'PUT' => $this->client->put($endpoint, $options),
+                'DELETE' => $this->client->delete($endpoint, $options),
+                default => throw new \InvalidArgumentException("Unsupported HTTP method: {$method}")
+            };
+        } catch (ConnectException $e) {
+            throw new HapiHttpException(
+                "Cannot connect to server at '{$this->endpoint}'. " .
+                "Error: " . $e->getMessage(),
+                $e->getCode(),
+                $e
+            );
+        }
+    }
 
     public function findOrganizationByIdentifier(string $system, string $id): Organization
     {
-        $response = $this->client->get("/fhir/Organization", [
-            'query' => [
-                'identifier' => $system . '|' . $id,
-                '_include' => 'Organization:endpoint',
-            ],
-        ]);
+        $queryParams = [
+            'identifier' => $system . '|' . $id,
+            '_include' => 'Organization:endpoint',
+        ];
+        $endpoint = '/fhir/Organization?' . http_build_query($queryParams);
+        $response = $this->makeRequest('GET', $endpoint);
 
         if ($response->getStatusCode() !== 200) {
             throw HapiHttpException::create(
@@ -103,9 +140,7 @@ class HapiService
             ],
             endpoint: null
         );
-        $response = $this->client->put('/fhir/Organization/' . $org->getId(), [
-            'json' => $org->toFhir(),
-        ]);
+        $response = $this->makeRequest('PUT', '/fhir/Organization/' . $org->getId(), $org->toFhir());
         if ($response->getStatusCode() >= 400) {
             throw HapiHttpException::create(
                 $response->getStatusCode(),
@@ -117,9 +152,7 @@ class HapiService
 
     public function updateOrganization(Organization $organization): void
     {
-        $response = $this->client->put("/fhir/Organization/{$organization->getId()}", [
-            'json' => $organization->toFhir(),
-        ]);
+        $response = $this->makeRequest('PUT', "/fhir/Organization/{$organization->getId()}", $organization->toFhir());
         if ($response->getStatusCode() >= 400) {
             throw HapiHttpException::create(
                 $response->getStatusCode(),
@@ -156,9 +189,7 @@ class HapiService
 
     public function updateEndpoint(Endpoint $endpoint): void
     {
-        $response = $this->client->put("/fhir/Endpoint/{$endpoint->getId()}", [
-            'json' => $endpoint->toFhir(),
-        ]);
+        $response = $this->makeRequest('PUT', "/fhir/Endpoint/{$endpoint->getId()}", $endpoint->toFhir());
         if ($response->getStatusCode() >= 400) {
             throw HapiHttpException::create(
                 $response->getStatusCode(),
@@ -169,7 +200,7 @@ class HapiService
 
     public function deleteEndpoint(string $endpointId): void
     {
-        $response = $this->client->delete("/fhir/Endpoint/{$endpointId}");
+        $response = $this->makeRequest('DELETE', "/fhir/Endpoint/{$endpointId}");
         if ($response->getStatusCode() >= 400) {
             throw HapiHttpException::create(
                 $response->getStatusCode(),
@@ -180,7 +211,7 @@ class HapiService
 
     public function deleteOrganization(string $organizationId): void
     {
-        $response = $this->client->delete("/fhir/Organization/{$organizationId}");
+        $response = $this->makeRequest('DELETE', "/fhir/Organization/{$organizationId}");
         if ($response->getStatusCode() >= 400) {
             throw HapiHttpException::create(
                 $response->getStatusCode(),
@@ -227,7 +258,7 @@ class HapiService
      */
     public function checkIfOrganizationRegistered(string $organizationId): void
     {
-        $response = $this->client->get("/fhir/Organization/{$organizationId}");
+        $response = $this->makeRequest('GET', "/fhir/Organization/{$organizationId}");
         if ($response->getStatusCode() !== 200) {
             throw HapiHttpException::create(
                 $response->getStatusCode(),
@@ -238,7 +269,7 @@ class HapiService
 
     public function checkIfEndpointRegistered(string $endpointId): void
     {
-        $response = $this->client->get("/fhir/Endpoint/{$endpointId}");
+        $response = $this->makeRequest('GET', "/fhir/Endpoint/{$endpointId}");
         if ($response->getStatusCode() !== 200) {
              throw HapiHttpException::create(
                  $response->getStatusCode(),

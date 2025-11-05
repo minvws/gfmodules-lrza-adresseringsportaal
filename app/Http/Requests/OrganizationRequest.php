@@ -57,9 +57,9 @@ class OrganizationRequest extends FormRequest
             'telecom.system' => 'nullable|string|in:phone,fax,email,pager,url,sms,other',
             'telecom.value' => 'nullable|string|max:255',
             'telecom.use' => 'nullable|string|in:work,temp,old,mobile',
-            'telecom.rank' => 'nullable|integer|min:1',
+            'telecom.rank' => 'nullable|integer|min:1|max:100',
             'telecom.period.start' => 'nullable|date',
-            'telecom.period.end' => 'nullable|date|after_or_equal:telecom.period.start',
+            'telecom.period.end' => 'nullable|date|after:telecom.period.start',
         ];
     }
 
