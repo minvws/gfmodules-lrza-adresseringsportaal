@@ -76,6 +76,10 @@ class OrganizationRequest extends FormRequest
             if (!empty($telecomData['value']) && empty($telecomData['system'])) {
                 $validator->errors()->add('telecom.system', 'A system is required if a value is provided.');
             }
+
+            if (!empty($telecomData['period']) && empty($telecomData['value'])) {
+                $validator->errors()->add('telecom.value', 'A value is required if a period is provided.');
+            }
         });
     }
 }
