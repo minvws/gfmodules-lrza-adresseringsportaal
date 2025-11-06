@@ -19,8 +19,6 @@
         @endsession
         <h1>Portal Register</h1>
 
-        <p>Here be registrations of portals. Please note that the cake is a lie.</p>
-
         @foreach ($errors->all() as $message)
         <div class="error" role="alert">
             <p>{{ $message }}</p>
