@@ -32,6 +32,18 @@ class OrganizationRequest extends FormRequest
             'org_name.required' => 'Organization name is required',
             'org_name.min' => 'Organization name must be at least :min character',
             'org_name.max' => 'Organization name may not be greater than :max characters',
+            'ura_identifier.regex' => 'Identifier format is invalid. Must be a valid URA number.',
+            'ura_identifier.digits_between' => 'Identifier must be between :min and :max digits.',
+            'ura_identifier.required' => 'URA identifier is required.',
+            'telecom.system.in' => 'The selected contact system is invalid.',
+            'telecom.value.max' => 'The contact value may not be greater than :max characters.',
+            'telecom.use.in' => 'The selected contact purpose is invalid.',
+            'telecom.rank.integer' => 'The preference order must be an integer.',
+            'telecom.rank.min' => 'The preference order must be at least :min.',
+            'telecom.rank.max' => 'The preference order may not be greater than :max.',
+            'telecom.period.end.after' => 'The end date must be after the start date.',
+            'telecom.period.start.date' => 'The start date is not a valid date.',
+            'telecom.period.end.date' => 'The end date is not a valid date.',
         ];
     }
 
