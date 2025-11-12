@@ -1,17 +1,8 @@
 @extends('layouts.guest')
 
 @section('content')
-<section>
+<section class="centered">
     <div>
-        @if (session()->has('error'))
-            <section role="alert" class="error no-print" aria-label="{{ __('error') }}">
-                <div>
-                    <h4>{{ session('error') }}</h4>
-                    <p>{{ session('error_description') }}</p>
-                </div>
-            </section>
-        @endif
-
         @session('success')
             <div class="confirmation" role="group" aria-label="Confirmation">
                 <p>{{ $value }}</p>
