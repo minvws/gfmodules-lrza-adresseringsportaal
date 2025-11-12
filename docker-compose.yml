@@ -18,24 +18,8 @@ services:
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
         volumes:
             - '.:/var/www/html'
-        depends_on:
-            portalhapi-health:
-                condition: service_healthy
         networks:
             - sail
-            - zmodules
-
-    portalhapi-health:
-        image: curlimages/curl
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://portalhapi:8080/actuator/health"]
-            start_period: 60s
-            start_interval: 5s
-        depends_on:
-            - portalhapi
-        stop_signal: SIGKILL
-        command: sleep infinity
-        networks:
             - zmodules
 
     portalhapi:

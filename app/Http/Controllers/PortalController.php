@@ -62,7 +62,14 @@ class PortalController extends Controller
         $telecom = $this->createContactPointFromValidatedData($validated_data);
         $organization->setTelecom($telecom);
 
-        $this->hapiService->updateOrganization($organization);
+        try {
+            $this->hapiService->updateOrganization($organization);
+        } catch (\Exception $e) {
+            return redirect()
+                ->route('portal.edit-organization')
+                ->withInput()
+                ->with('error', 'Failed to update organization: ' . $e->getMessage());
+        }
 
         return redirect()
             ->route('portal.index')
