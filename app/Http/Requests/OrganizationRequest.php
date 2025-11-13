@@ -8,6 +8,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class OrganizationRequest extends FormRequest
 {
+    private const PHONE_FORMAT_ERROR = 'The contact detail format is invalid.
+        It should comply with E.123 (inter)national notation.';
+    private const PHONE_FORMAT_REGEX = '/^(?:\+(?=(?:.*\d){2,15}$)(?:\([0-9]{1,3}\)|[0-9]{1,3})' .
+        '(?: [0-9]{1,12})+|(?=(?:.*\d){2,15}$)(?:\([0-9]{1,6}\)|[0-9]{1,6})(?: [0-9]{1,12})+)$/';
+    private const DATETIME_REGEX = '/^([0-9]([0-9]([0-9][1-9]|[1-9]0)|[1-9]00)|[1-9]000)(-(0[1-9]|1[0-2])' .
+     '(-(0[1-9]|[1-2][0-9]|3[0-1])(T([01][0-9]|2[0-3]):[0-5][0-9]:([0-5][0-9]|60)' .
+     '(\.[0-9]+)?(Z|(\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00)))?)?)?$/';
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -25,6 +32,18 @@ class OrganizationRequest extends FormRequest
             'org_name.required' => 'Organization name is required',
             'org_name.min' => 'Organization name must be at least :min character',
             'org_name.max' => 'Organization name may not be greater than :max characters',
+            'ura_identifier.regex' => 'Identifier format is invalid. Must be a valid URA number.',
+            'ura_identifier.digits_between' => 'Identifier must be between :min and :max digits.',
+            'ura_identifier.required' => 'URA identifier is required.',
+            'telecom.system.in' => 'The selected contact system is invalid.',
+            'telecom.value.max' => 'The contact value may not be greater than :max characters.',
+            'telecom.use.in' => 'The selected contact purpose is invalid.',
+            'telecom.rank.integer' => 'The preference order must be an integer.',
+            'telecom.rank.min' => 'The preference order must be at least :min.',
+            'telecom.rank.max' => 'The preference order may not be greater than :max.',
+            'telecom.period.end.after' => 'The end date must be after the start date.',
+            'telecom.period.start.date' => 'The start date is not a valid date.',
+            'telecom.period.end.date' => 'The end date is not a valid date.',
         ];
     }
 
@@ -72,13 +91,59 @@ class OrganizationRequest extends FormRequest
         $validator->after(function ($validator) {
             $telecomData = $this->input('telecom', []);
 
-            // FHIR Rule: A system is required if a value is provided
-            if (!empty($telecomData['value']) && empty($telecomData['system'])) {
-                $validator->errors()->add('telecom.system', 'A system is required if a value is provided.');
+            $regexRules = [
+                'phone' => self::PHONE_FORMAT_REGEX,
+                'fax'   => self::PHONE_FORMAT_REGEX,
+                'pager' => self::PHONE_FORMAT_REGEX,
+                'sms'   => self::PHONE_FORMAT_REGEX,
+                'url'   => '/^((https?|ftp):\/\/)?(([\w-]+\.)+[a-z]{2,})(:\d{1,5})?(\/[^\s]*)?$/',
+                'email' => '/^[\w\.-]+@[\w\.-]+\.\w{2,}$/',
+            ];
+
+            $addError = fn($field, $message) => $validator->errors()->add($field, $message);
+
+            // Required value checks
+            if ((isset($telecomData['system']) || isset($telecomData['use'])) && empty($telecomData['value'])) {
+                $addError('telecom.value', 'The contact details are required when system or purpose is provided.');
             }
 
-            if (!empty($telecomData['period']) && empty($telecomData['value'])) {
-                $validator->errors()->add('telecom.value', 'A value is required if a period is provided.');
+            // Regex validation for specific systems
+            if (
+                !empty($telecomData['system'])
+                && !empty($telecomData['value'])
+                && isset($regexRules[$telecomData['system']])
+            ) {
+                if (!preg_match($regexRules[$telecomData['system']], $telecomData['value'])) {
+                    $messages = [
+                        'phone' => self::PHONE_FORMAT_ERROR,
+                        'fax'   => self::PHONE_FORMAT_ERROR,
+                        'pager' => self::PHONE_FORMAT_ERROR,
+                        'sms'   => self::PHONE_FORMAT_ERROR,
+                        'url'   => 'The URL format is invalid.',
+                        'email' => 'The email format is invalid.',
+                    ];
+                    $addError('telecom.value', $messages[$telecomData['system']]);
+                }
+            }
+
+            // FHIR-specific rules
+            if (!empty($telecomData['value']) && empty($telecomData['system'])) {
+                $addError('telecom.system', 'A system is required if a value is provided.');
+            }
+
+            if (
+                (!empty($telecomData['period']['start']) ||
+                !empty($telecomData['period']['end'])) && empty($telecomData['value'])
+            ) {
+                $addError('telecom.value', 'A value is required if a period is provided.');
+            }
+
+            foreach (['start', 'end'] as $field) {
+                if (!empty($telecomData['period'][$field])) {
+                    if (!preg_match(self::DATETIME_REGEX, $telecomData['period'][$field])) {
+                        $addError("telecom.period.{$field}", "The {$field} date format is invalid.");
+                    }
+                }
             }
         });
     }

@@ -45,8 +45,9 @@ class OidcLoginResponseHandler implements LoginResponseHandlerInterface
             );
             $created = true;
         } catch (HapiException $e) {
-            return redirect()->route('login')->withErrors(
-                ['login' => 'Invalid response from HAPI: ' . $e->getMessage()]
+            return redirect()->route('login')->with(
+                'error',
+                'Invalid response from HAPI: ' . $e->getMessage()
             );
         }
 

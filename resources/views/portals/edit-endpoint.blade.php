@@ -3,14 +3,6 @@
 @section('content')
     <section class="layout-form">
         <div>
-            @if (session()->has('error'))
-                <section role="alert" class="error no-print" aria-label="{{ __('error') }}">
-                    <div>
-                        <h4>{{ session('error') }}</h4>
-                        <p>{{ session('error_description') }}</p>
-                    </div>
-                </section>
-            @endif
 
             @foreach ($errors->all() as $message)
                 <div class="error" role="alert">
