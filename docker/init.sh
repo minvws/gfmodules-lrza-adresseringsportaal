@@ -1,10 +1,12 @@
-#!/bin/bash
-echo "Populating HAPI FHIR DB with test data..."
+#!/bin/bash -xe
 
-curl -v -s -X POST http://portalhapi:8080/fhir \
-    -H "Content-Type: application/fhir+json" \
-    -H "Accept: application/fhir+json" \
-    --json @seed/seed.json
+# set user from docker compose
+if [ ! -z "$WWWUSER" ]; then
+	usermod -u "$WWWUSER" sail
+fi
 
-echo "Running supervisord..."
-/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+# sail user executes init sail
+gosu "$WWWUSER" /var/www/html/docker/init-sail.sh
+
+echo "starting container from init.."
+start-container
