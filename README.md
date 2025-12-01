@@ -66,7 +66,7 @@ The easiest way to run this application is by using the docker-compose project i
 docker compose up
 ```
 
-This will start the project on 'http://localhost:8512'
+This will start the project on 'http://localhost:8512' and a simple HAPI server at 'http://localhost:8080'
 
 ### Docker standalone
 
