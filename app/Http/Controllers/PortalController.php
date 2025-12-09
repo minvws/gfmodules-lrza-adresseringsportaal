@@ -152,9 +152,14 @@ class PortalController extends Controller
                 display: EndpointConnectionTypes::getDisplayNameByCode($validated_data['connectionType'])
             ),
             managingOrgId: $organization->getId(),
-            payloadType: [['text' => 'mCSD resource']] // Default payload type
+            payloadType: [[
+                'coding' => [[
+                    'code' => config('fhir.default_endpoint_payloadtype_code'),
+                    'display' => config('fhir.default_endpoint_payloadtype_display')
+                ]],
+                'text' => config('fhir.default_endpoint_payloadtype_text')
+            ]]
         );
-
         $this->hapiService->updateEndpoint($endpoint);
         $organization->setEndpoint($endpoint);
         $this->hapiService->updateOrganization($organization);
