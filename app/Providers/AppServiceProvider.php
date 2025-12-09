@@ -35,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         $this->app->singleton(HapiService::class, function (Application $app) {
-            return new HapiService(config('hapi.endpoint'));
+            return new HapiService(config('fhir.endpoint'));
         });
 
         $this->bootAuth();

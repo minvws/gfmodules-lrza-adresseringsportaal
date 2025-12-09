@@ -18,7 +18,7 @@ class Endpoint
     protected array $payloadType = [];
 
     /**
-     * @param array<int, array<string, string>> $payloadType
+     * @param array<int, array<string, mixed>> $payloadType
      */
     public function __construct(
         string $id,
@@ -39,7 +39,7 @@ class Endpoint
     }
 
     /**
-     * @return array<int, array<string, string>>
+     * @return array<int, array<string, mixed>>
      */
     public function getPayloadType(): array
     {
@@ -47,7 +47,7 @@ class Endpoint
     }
 
     /**
-     * @param array<int, array<string, string>> $payloadType
+     * @param array<int, array<string, mixed>> $payloadType
      */
     public function setPayloadType(array $payloadType): void
     {

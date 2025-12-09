@@ -161,32 +161,6 @@ class HapiService
         }
     }
 
-    public function createEndpoint(string $organizationId): void
-    {
-        $endpoint = new Endpoint(
-            id: \Ramsey\Uuid\Uuid::uuid4()->toString(),
-            address: 'http://example.com/fhir/',
-            managingOrgId: $organizationId,
-            status: \App\Models\EndpointStatus::ACTIVE,
-            connectionType: new \App\Models\Coding(
-                system: 'http://hl7.org/fhir/ValueSet/endpoint-connection-type',
-                code: 'hl7-fhir-rest',
-                display: 'HL7 FHIR'
-            ),
-            payloadType: [['text' => 'mCSD resource']],
-            period: null,
-        );
-        $response = $this->client->put('/fhir/Endpoint', [
-            'json' => $endpoint->toFhir(),
-        ]);
-        if ($response->getStatusCode() >= 400) {
-            throw HapiHttpException::create(
-                $response->getStatusCode(),
-                (string)$response->getBody()
-            );
-        }
-    }
-
     public function updateEndpoint(Endpoint $endpoint): void
     {
         $response = $this->makeRequest('PUT', "/fhir/Endpoint/{$endpoint->getId()}", $endpoint->toFhir());
