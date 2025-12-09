@@ -12,16 +12,16 @@ RUN apt-get update && apt-get install -y \
     nginx \
     supervisor \
     && docker-php-ext-configure zip \
-    && docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd
+    && docker-php-ext-install zip pdo_mysql mbstring exif pcntl bcmath gd \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY docker/nginx.conf /etc/nginx/sites-available/default
+
 RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY docker/init.sh /init.sh
-RUN chmod +x /init.sh
 
 WORKDIR /var/www/html
 
@@ -32,4 +32,4 @@ RUN composer install --optimize-autoloader --no-dev && \
 
 EXPOSE 80
 
-CMD ["/init.sh"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
