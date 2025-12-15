@@ -154,6 +154,7 @@ class PortalController extends Controller
             managingOrgId: $organization->getId(),
             payloadType: [[
                 'coding' => [[
+                    'system' => config('fhir.default_endpoint_payloadtype_system'),
                     'code' => config('fhir.default_endpoint_payloadtype_code'),
                     'display' => config('fhir.default_endpoint_payloadtype_display')
                 ]],
