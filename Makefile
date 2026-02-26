@@ -6,13 +6,10 @@
 
 all: help
 
-setup: setup-config setup-npm setup-php  ## Setup the project
+setup: setup-config setup-php  ## Setup the project
 
 setup-config:
 	. scripts/setup-config.sh
-
-setup-npm:
-	. scripts/setup-npm.sh
 
 setup-php:
 	. scripts/setup-php.sh
