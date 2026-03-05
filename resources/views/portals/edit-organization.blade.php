@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="layout-form">
-        <div>
+        <div class="content-wrapper">
             @foreach ($errors->all() as $message)
                 <div class="error" role="alert">
                     <p>{{ $message }}</p>
@@ -31,8 +31,8 @@
                     <input type="text" id="org_name" name="org_name" value="{{ old('org_name', $organization->getName()) }}" required>
                 </div>
 
-                <x-contact-point 
-                    name="telecom" 
+                <x-contact-point
+                    name="telecom"
                     label="Organization Contact Information"
                     :system="$organization->getTelecom()?->getSystem()?->value"
                     :value="$organization->getTelecom()?->getValue()"
@@ -40,7 +40,7 @@
                     :rank="$organization->getTelecom()?->getRank()"
                     :period-start="$organization->getTelecom()?->getPeriod()?->getStart()?->format('c')"
                     :period-end="$organization->getTelecom()?->getPeriod()?->getEnd()?->format('c')"
-                    :system-options="\App\Models\ContactPointSystem::getAllAsArray()" 
+                    :system-options="\App\Models\ContactPointSystem::getAllAsArray()"
                     :use-options="\App\Models\ContactPointUse::getAllAsArray()"
                 />
 

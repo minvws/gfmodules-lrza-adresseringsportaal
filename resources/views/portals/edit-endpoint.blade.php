@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="layout-form">
-        <div>
+        <div class="content-wrapper">
 
             @foreach ($errors->all() as $message)
                 <div class="error" role="alert">
@@ -35,14 +35,14 @@
                     <div class="column-2">
                         <div>
                             <label for="period-start">Active from:</label>
-                            <input type="text" id="period-start" name="period-start" 
+                            <input type="text" id="period-start" name="period-start"
                                    placeholder="2025-06-24T10:30:00+02:00"
                                    value="{{ old('period-start', isset($endpoint) && $endpoint->getPeriod() && $endpoint->getPeriod()->getStart() ? $endpoint->getPeriod()->getStart()->format('c') : '') }}" />
                             <small>Format: YYYY-MM-DDTHH:MM:SS+TZ (e.g., 2025-06-24T10:30:00+02:00)</small>
                         </div>
                         <div>
                             <label for="period-end">Active till:</label>
-                            <input type="text" id="period-end" name="period-end" 
+                            <input type="text" id="period-end" name="period-end"
                                    placeholder="2025-06-24T15:30:00+02:00"
                                    value="{{ old('period-end', isset($endpoint) && $endpoint->getPeriod() && $endpoint->getPeriod()->getEnd() ? $endpoint->getPeriod()->getEnd()->format('c') : '') }}" />
                             <small>Format: YYYY-MM-DDTHH:MM:SS+TZ (e.g., 2025-06-24T15:30:00+02:00)</small>

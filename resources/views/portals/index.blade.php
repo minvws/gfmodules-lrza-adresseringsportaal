@@ -2,7 +2,7 @@
 
 @section('content')
 <section>
-    <div>
+    <div class="content-wrapper">
         @if (session()->has('error'))
             <section role="alert" class="error no-print" aria-label="{{ __('error') }}">
                 <div>
@@ -60,6 +60,6 @@
                 @endif
             </div>
         </div>
-</div>
+    </div>
 </section>
 @endsection

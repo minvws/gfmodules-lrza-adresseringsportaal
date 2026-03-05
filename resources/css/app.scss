@@ -1,11 +1,16 @@
-@use "manon";
-
-// Start Manon Theme
-@use "@minvws/manon-themes/basic-bold" with (
- $font-path: "@minvws/manon-themes/basic-bold/fonts"
-);
-// End Manon Theme
+@use "@minvws/manon-themes/rijkshuisstijl-2008/variants/ruby-red";
+@use "@minvws/manon/components/bundles/all";
 
 @use "styling/breadcrumb-bar";
 @use "components/external-login";
 @use "components/error";
+
+.logo, a.logo, a:visited.logo, a:hover.logo, a:active.logo, a:focus.logo {
+    &.le-logo img {
+        width: 100px;
+        max-width: 100px;
+        height: 100px;
+        max-height: 100px;
+        margin-top: 2rem;
+    }
+}

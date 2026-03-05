@@ -2,7 +2,7 @@
 
 @section('content')
 <section class="centered">
-    <div>
+    <div class="content-wrapper">
         @session('success')
             <div class="confirmation" role="group" aria-label="Confirmation">
                 <p>{{ $value }}</p>

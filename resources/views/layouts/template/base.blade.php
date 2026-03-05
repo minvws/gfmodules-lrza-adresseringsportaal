@@ -19,11 +19,13 @@
     @endif
 
     @if (session()->has('error'))
+        <div class="content-wrapper">
         <section role="alert" class="error no-print" aria-label="{{ __('error') }}">
             <div>
                 <p><span>@lang('Error'):</span> {{ session('error') }} {{ session('error_description') }}</p>
             </div>
         </section>
+        </div>
     @endif
 
 
