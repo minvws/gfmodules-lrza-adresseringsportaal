@@ -1,5 +1,5 @@
 <footer>
-    <div>
+    <div class="content-wrapper">
         <div class="two-thirds-one-third">
             <span class="slogan" lang="nl">De Rijksoverheid. Voor Nederland</span>
 

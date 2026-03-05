@@ -4,7 +4,7 @@
     data-media="(min-width: 42rem)"
     aria-label="{{ __('Main navigation') }}"
     class="collapsible">
-    <div class="collapsing-element">
+    <div class="content-wrapper collapsing-element">
         <ul>
             <li>
                 <a href="{{ route('index') }}" @if(\Illuminate\Support\Facades\Route::currentRouteName() === 'index') aria-current="page" @endif><span class="icon icon-home">Home-icoon</span>@lang('Home')</a>
