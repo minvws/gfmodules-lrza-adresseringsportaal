@@ -8,7 +8,7 @@
         "guzzlehttp/guzzle": "^7.8",
         "jumbojett/openid-connect-php": "1.0.2",
         "laravel/framework": "^12.8",
-        "laravel/tinker": "^2.10.1",
+        "laravel/tinker": "^3.0.0",
         "minvws/openid-connect-php-laravel": "^0.4.0"
     },
     "require-dev": {
