@@ -14,8 +14,8 @@
         "concurrently": "^9.2.1"
     },
     "dependencies": {
-        "@minvws/manon": "^18.3.0",
-        "@minvws/manon-themes": "^18.3.0",
-        "eslint": "^10.0.3"
+        "@minvws/manon": "^18.4.0",
+        "@minvws/manon-themes": "^18.4.0",
+        "eslint": "^10.1.0"
     }
 }
