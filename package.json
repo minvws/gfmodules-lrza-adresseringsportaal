@@ -16,6 +16,6 @@
     "dependencies": {
         "@minvws/manon": "^18.5.0",
         "@minvws/manon-themes": "^18.5.0",
-        "eslint": "^10.4.0"
+        "eslint": "^10.4.1"
     }
 }
